@@ -138,7 +138,10 @@ input[type=range]{width:100%;accent-color:var(--amber)}
 <body>
 
 <div class="scena">
-  <video autoplay muted loop playsinline poster="../assets/img/poster.jpg" src="../assets/video/hero-540.mp4"></video>
+  <!-- Bez autoplay: wideo stoi na pierwszej klatce, dopóki zasłona nie ruszy.
+       preload="auto" żeby ruszyło natychmiast, bez doczytywania. -->
+  <video id="wideo" muted loop playsinline preload="auto"
+         poster="../assets/img/poster.jpg" src="../assets/video/hero-540.mp4"></video>
   <div class="scena__tekst"><h1>Kawa to dopiero początek.</h1></div>
 </div>
 
@@ -191,6 +194,15 @@ input[type=range]{width:100%;accent-color:var(--amber)}
   </div>
 
   <div class="grupa">
+    <label>Kiedy rusza wideo</label>
+    <div class="radio" id="start">
+      <label><input type="radio" name="s" value="rozsuwanie" checked><span>gdy zasłona rusza</span></label>
+      <label><input type="radio" name="s" value="po"><span>po rozsunięciu</span></label>
+      <label><input type="radio" name="s" value="odrazu"><span>od razu (jak było)</span></label>
+    </div>
+  </div>
+
+  <div class="grupa">
     <label>Kolor zasłony</label>
     <div class="radio" id="kolor">
       <label><input type="radio" name="k" value="#F9F4E7" checked><span>krem</span></label>
@@ -210,12 +222,25 @@ input[type=range]{width:100%;accent-color:var(--amber)}
 
 <script>
 (function(){
+  var wideo=document.getElementById('wideo');
   var splash=document.getElementById('splash'), wrap=document.getElementById('wrap'),
       znak=document.getElementById('znak'), etyk=document.getElementById('etykieta'),
       podsum=document.getElementById('podsum'), root=document.documentElement;
   var timery=[];
 
   function czysc(){ timery.forEach(clearTimeout); timery=[]; }
+  function graj(){ var p = wideo.play(); if (p && p.catch) p.catch(function(){}); }
+  /* Cofnij wideo na start i zatrzymaj — inaczej po odsłonięciu byłoby już
+     w połowie i pierwsze ujęcia przepadają. Gdy metadane jeszcze nie doszły,
+     przypisanie currentTime przepada, więc powtarzamy je po loadedmetadata. */
+  function cofnij(){
+    try { wideo.pause(); wideo.currentTime = 0; } catch(e){}
+    if (wideo.readyState === 0) {
+      wideo.addEventListener('loadedmetadata', function(){
+        try { wideo.currentTime = 0; } catch(e){}
+      }, { once:true });
+    }
+  }
   function po(ms,f){ timery.push(setTimeout(f,ms)); }
 
   function ustawienia(){
@@ -229,7 +254,8 @@ input[type=range]{width:100%;accent-color:var(--amber)}
       napis: document.getElementById('napis').checked,
       napisTxt: document.getElementById('napisTxt').value,
       zanik: +document.getElementById('zanik').value,
-      wyprz: +document.getElementById('wyprz').value
+      wyprz: +document.getElementById('wyprz').value,
+      start: document.querySelector('input[name=s]:checked').value
     };
   }
 
@@ -250,6 +276,9 @@ input[type=range]{width:100%;accent-color:var(--amber)}
     etyk.style.color = ciemna ? 'rgba(249,244,231,.55)' : '';
     znak.style.filter = ciemna ? 'brightness(0) invert(1)' : '';
 
+    cofnij();
+    if (u.start === 'odrazu') graj();
+
     splash.classList.remove('znikniete','wychodzi','wszedl');
     wrap.style.transition='none'; wrap.style.height='0%';
     void splash.offsetWidth;                       /* wymuś przeliczenie */
@@ -265,12 +294,19 @@ input[type=range]{width:100%;accent-color:var(--amber)}
 
     po(u.trwa, function(){
       splash.classList.add('wychodzi');
-      po(u.wyprz+u.roz+60, function(){ splash.classList.add('znikniete'); });
+      if (u.start === 'rozsuwanie') po(u.wyprz, graj);
+      po(u.wyprz+u.roz+60, function(){
+        splash.classList.add('znikniete');
+        if (u.start === 'po') graj();
+      });
     });
 
     podsum.innerHTML='Zasłona: <b>'+u.trwa+' ms</b> · logo gaśnie w <b>'+u.zanik+
       ' ms</b>, zasłona rusza <b>'+u.wyprz+' ms</b> później · rozsuwanie: <b>'+u.roz+
-      ' ms</b> · razem <b>'+(u.trwa+u.wyprz+u.roz)+' ms</b>';
+      ' ms</b> · razem <b>'+(u.trwa+u.wyprz+u.roz)+' ms</b><br>Wideo rusza: <b>'+
+      ({rozsuwanie:'gdy zasłona rusza ('+(u.trwa+u.wyprz)+' ms)',
+        po:'po rozsunięciu ('+(u.trwa+u.wyprz+u.roz)+' ms)',
+        odrazu:'od razu (0 ms)'})[u.start]+'</b>';
   }
 
   document.getElementById('odtworz').addEventListener('click',odtworz);
