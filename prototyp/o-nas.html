@@ -7,239 +7,240 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@300..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/style.css?v=10">
+<link rel="stylesheet" href="../assets/css/style.css?v=11">
 <style>
-/* ---- panel wyboru ---- */
-.wybor{
-  position:fixed;z-index:200;left:50%;transform:translateX(-50%);bottom:18px;
+.wybor{position:fixed;z-index:200;left:50%;transform:translateX(-50%);bottom:18px;
   display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
   background:rgba(255,253,246,.97);backdrop-filter:blur(10px);
   border:1px solid var(--line);border-radius:100px;padding:7px;
-  box-shadow:0 14px 40px rgba(20,14,10,.26);
-}
-.wybor button{
-  border:none;background:transparent;cursor:pointer;
-  font-family:var(--sans);font-size:12.5px;color:var(--ink);
-  padding:8px 14px;border-radius:100px;transition:background .2s ease,color .2s ease;
-}
+  box-shadow:0 14px 40px rgba(20,14,10,.26)}
+.wybor button{border:none;background:transparent;cursor:pointer;font-family:var(--sans);
+  font-size:12.5px;color:var(--ink);padding:8px 14px;border-radius:100px;
+  transition:background .2s ease,color .2s ease}
 .wybor button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
-.metka{
-  position:fixed;z-index:200;top:14px;left:14px;
-  background:rgba(255,253,246,.95);border:1px solid var(--line);border-radius:100px;
-  padding:6px 14px;font-size:12px;color:var(--ink-mute);
-}
+.metka{position:fixed;z-index:200;top:14px;left:14px;background:rgba(255,253,246,.95);
+  border:1px solid var(--line);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--ink-mute)}
 .metka b{color:var(--ink);font-weight:500}
 body{padding-bottom:80px}
 [data-wariant]{display:none}
 [data-wariant].aktywny{display:block}
 
-/* ================= A — portret pełnowymiarowy ================= */
-.a-grid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:center;gap:0}
+/* ===== A — osobista opowieść ===== */
+.a-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;align-items:stretch}
 @media (max-width:900px){ .a-grid{grid-template-columns:1fr} }
-.a-foto{margin:0;position:relative;min-height:min(76vh,680px)}
-.a-foto img{width:100%;height:100%;object-fit:cover;display:block;border-radius:0 var(--r) var(--r) 0}
-@media (max-width:900px){ .a-foto{min-height:52vh} .a-foto img{border-radius:0} }
-.a-tresc{padding:clamp(32px,5vw,72px)}
-.a-tresc .h2{margin-top:.2em}
+.a-foto{margin:0;position:relative}
+.a-foto img{width:100%;height:100%;min-height:min(80vh,700px);object-fit:cover;display:block;border-radius:var(--r)}
+@media (max-width:900px){ .a-foto img{min-height:56vh} }
+.a-tekst{padding:clamp(28px,4vw,64px);display:flex;flex-direction:column;justify-content:center}
+.a-tekst .h2{font-size:clamp(2.1rem,4.2vw,3.2rem)}
+.a-podpisy{display:flex;gap:26px;margin-top:2.4em;padding-top:1.6em;border-top:1px solid var(--line)}
+.a-podpisy div{font-size:.85rem;color:var(--ink-mute);line-height:1.5}
+.a-podpisy b{display:block;font-family:var(--serif);font-weight:400;font-size:1.05rem;color:var(--ink)}
 
-/* ================= B — cytat na pierwszym planie ================= */
-.b-cytat{
-  max-width:920px;margin:0 auto clamp(40px,6vw,72px);text-align:center;
-}
-.b-cytat blockquote{
-  font-family:var(--serif);font-style:italic;font-weight:300;
-  font-size:clamp(1.5rem,3.6vw,2.6rem);line-height:1.24;letter-spacing:-.015em;
-  margin:0 0 .7em;color:var(--ink);text-wrap:balance;
-}
-.b-cytat cite{font-style:normal;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-mute)}
-.b-dol{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(28px,5vw,64px);align-items:start}
-@media (max-width:860px){ .b-dol{grid-template-columns:1fr} }
-.b-dol figure{margin:0}
-.b-dol img{width:100%;height:auto;border-radius:var(--r);box-shadow:0 20px 50px rgba(42,33,26,.18)}
-.b-kolumny{columns:2;column-gap:34px}
-@media (max-width:640px){ .b-kolumny{columns:1} }
-.b-kolumny p{margin:0 0 1.1em;break-inside:avoid}
+/* ===== B — mozaika zdjęć ===== */
+.b-siatka{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:clamp(30px,4vw,52px)}
+@media (max-width:900px){ .b-siatka{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:520px){ .b-siatka{grid-template-columns:1fr} }
+.b-kafel{margin:0;position:relative;overflow:hidden;border-radius:var(--r)}
+.b-kafel img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.3,1)}
+.b-kafel:hover img{transform:scale(1.04)}
+.b-kafel figcaption{
+  position:absolute;left:0;right:0;bottom:0;padding:14px 16px;color:#fff;font-size:.87rem;line-height:1.35;
+  background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.78))}
+.b-duzy{grid-column:span 2;grid-row:span 2}
+.b-szeroki{grid-column:span 2}
+.b-kafel{aspect-ratio:1}
+.b-duzy{aspect-ratio:1}
+.b-szeroki{aspect-ratio:2/1}
+@media (max-width:520px){ .b-duzy,.b-szeroki{grid-column:span 1;aspect-ratio:1} }
 
-/* ================= C — oś czasu ================= */
-.c-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(30px,5vw,72px)}
-@media (max-width:860px){ .c-grid{grid-template-columns:1fr} }
-.c-os{list-style:none;margin:0;padding:0;position:relative}
-.c-os::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--line)}
-.c-os li{position:relative;padding:0 0 30px 34px}
-.c-os li:last-child{padding-bottom:0}
-.c-os li::before{
-  content:"";position:absolute;left:0;top:6px;width:15px;height:15px;border-radius:50%;
-  background:var(--cream);border:2px solid var(--amber);
-}
-.c-os li.teraz::before{background:var(--amber)}
-.c-kiedy{display:block;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:.4em}
-.c-os h3{font-family:var(--serif);font-weight:400;font-size:1.3rem;margin:0 0 .3em;line-height:1.2}
-.c-os p{margin:0;font-size:.95rem;color:var(--ink-mute);line-height:1.6}
-.c-foto{margin:0 0 1.6em}
-.c-foto img{width:100%;height:auto;border-radius:var(--r);box-shadow:0 18px 44px rgba(42,33,26,.16)}
+/* ===== C — liczby ===== */
+.c-naglowek{max-width:900px}
+.c-liczby{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:clamp(34px,5vw,60px) 0}
+@media (max-width:860px){ .c-liczby{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:520px){ .c-liczby{grid-template-columns:1fr} }
+.c-liczby div{background:var(--card);padding:clamp(24px,3vw,34px)}
+.c-liczby b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(2.2rem,4.4vw,3.1rem);
+  line-height:1;color:var(--ink);margin-bottom:.28em;letter-spacing:-.02em}
+.c-liczby span{font-size:.9rem;color:var(--ink-mute);line-height:1.5}
+.c-pas{margin:0;border-radius:var(--r);overflow:hidden}
+.c-pas img{width:100%;height:clamp(220px,32vw,340px);object-fit:cover;display:block}
+.c-stopka{margin:1.8em 0 0;max-width:640px;color:var(--ink-mute)}
 
-/* ================= D — zdjęcie nachodzące na kartę ================= */
-.d-wrap{position:relative;padding-top:clamp(20px,4vw,40px)}
-.d-karta{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:clamp(32px,5vw,64px);
-  padding-left:clamp(32px,26vw,400px);
-  min-height:420px;
+/* ===== D — rozmowa ===== */
+.d-lista{margin-top:clamp(32px,4vw,56px);display:flex;flex-direction:column;gap:clamp(30px,4vw,56px)}
+.d-poz{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:clamp(24px,4vw,54px);align-items:center}
+.d-poz:nth-child(even){grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr)}
+.d-poz:nth-child(even) .d-foto{order:2}
+@media (max-width:800px){
+  .d-poz,.d-poz:nth-child(even){grid-template-columns:1fr}
+  .d-poz:nth-child(even) .d-foto{order:0}
 }
-@media (max-width:900px){ .d-karta{padding-left:clamp(24px,5vw,40px);padding-top:clamp(200px,42vw,280px)} }
-.d-foto{
-  position:absolute;left:clamp(0px,3vw,40px);top:0;bottom:clamp(20px,4vw,40px);
-  width:clamp(200px,22vw,330px);margin:0;
-}
-.d-foto img{width:100%;height:100%;object-fit:cover;border-radius:var(--r);
-  box-shadow:0 26px 60px rgba(42,33,26,.26)}
-@media (max-width:900px){
-  .d-foto{left:clamp(24px,5vw,40px);right:clamp(24px,5vw,40px);width:auto;bottom:auto;height:clamp(170px,38vw,250px)}
-}
-.d-podpis{margin:1em 0 0;font-size:.82rem;color:var(--ink-mute)}
+.d-foto{margin:0}
+.d-foto img{width:100%;height:clamp(200px,26vw,300px);object-fit:cover;border-radius:var(--r);
+  box-shadow:0 18px 44px rgba(42,33,26,.16)}
+.d-pyt{font-family:var(--serif);font-weight:400;font-size:clamp(1.35rem,2.6vw,1.9rem);
+  line-height:1.2;margin:0 0 .55em;color:var(--ink);letter-spacing:-.015em}
+.d-pyt::before{content:"— ";color:var(--amber)}
+.d-odp{margin:0 0 .9em;color:var(--ink-mute);line-height:1.65}
+.d-kto{font-size:.76rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber-ink)}
 </style>
 </head>
 <body>
 
-<div class="metka">Prototyp · wariant <b id="metka-nazwa">A</b></div>
+<div class="metka">Prototyp · <b id="metka-nazwa">A</b></div>
 
-<!-- ============================ A ============================ -->
+<!-- ======================= A ======================= -->
 <section class="section section--cream aktywny" data-wariant="A">
   <div class="wrap">
     <div class="a-grid">
-      <figure class="a-foto">
-        <img src="../assets/img/wlasciciele.jpg" alt="Angelika i Daniel Jackowscy przed lokalem">
-      </figure>
-      <div class="a-tresc">
-        <p class="eyebrow">O nas</p>
-        <h2 class="h2">Kawa to dopiero&nbsp;początek.</h2>
-        <p class="lead">Taki napis wisi nad wejściem. To nie slogan — to opis planu.</p>
-        <p>CIEkawa powstała z wieloletniego marzenia <strong>Angeliki i Daniela Jackowskich</strong>. Zawodowo są specjalistami w innych branżach, ale do gastronomii wracali od lat — aż w końcu postawili wszystko na jedną kartę.</p>
-        <p>Lokal jest niewielki, mieści około 20 osób, a ogródek pozwala zjeść na świeżym powietrzu. Znajdziesz go przy Mickiewicza, w sąsiedztwie Witryny Sztuki.</p>
-        <ul class="chips">
-          <li>≈ 20 miejsc + ogródek</li><li>Przyjazne dzieciom</li><li>Można z psem</li>
-          <li>Dobre miejsce do pracy</li><li>Opcje bezglutenowe</li>
-        </ul>
+      <figure class="a-foto"><img src="../assets/img/wlasciciele.jpg" alt="Angelika i Daniel przed lokalem"></figure>
+      <div class="a-tekst">
+        <p class="eyebrow">Poznajmy się</p>
+        <h2 class="h2">Jesteśmy Angelika i&nbsp;Daniel.</h2>
+        <p class="lead">Zawodowo robimy zupełnie co innego. Do gastronomii wracaliśmy latami — najpierw myślami, potem coraz konkretniej.</p>
+        <p>Nie baliśmy się. Wierzyliśmy, że serce włożone w to, co robimy, ktoś w końcu doceni. W sierpniu 2025 otworzyliśmy drzwi przy Mickiewicza i od tamtej pory nie zamknęliśmy ich ani na dzień dłużej, niż trzeba.</p>
+        <p>Nad wejściem powiesiliśmy napis: <em>Kawa to dopiero początek</em>. Traktujemy go dosłownie — stąd śniadania o szesnastej, matcha ubijana przy Was i ciasta, które pieczemy sami.</p>
+        <div class="a-podpisy">
+          <div><b>Angelika</b>kuchnia, wypieki, pomysły na kartę</div>
+          <div><b>Daniel</b>kawa, ziarno, wszystko dookoła</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================ B ============================ -->
+<!-- ======================= B ======================= -->
 <section class="section section--cream" data-wariant="B">
   <div class="wrap">
-    <p class="eyebrow" style="text-align:center">O nas</p>
-    <div class="b-cytat">
-      <blockquote>„Chcieliśmy stworzyć miejsce, które będzie dla nas i naszych gości jak dom, gdzie ludzie będą chcieli wracać dla atmosfery, smaku i spotkań."</blockquote>
-      <cite>Angelika Jackowska, współwłaścicielka</cite>
-    </div>
-    <div class="b-dol">
-      <figure>
-        <img src="../assets/img/wlasciciele.jpg" alt="Angelika i Daniel Jackowscy przed lokalem">
+    <p class="eyebrow">U nas</p>
+    <h2 class="h2" style="max-width:18ch">Tak wygląda u nas zwykły&nbsp;wtorek.</h2>
+    <p class="section__note" style="max-width:560px">Bez wielkich słów. To po prostu to, co tego dnia wyszło z kuchni i&nbsp;z&nbsp;ekspresu.</p>
+
+    <div class="b-siatka">
+      <figure class="b-kafel b-duzy">
+        <img src="../assets/img/fb-kawa.jpg" alt="Dwie kawy z rozetą na stoliku wśród roślin">
+        <figcaption>Rozeta wychodzi ręcznie. Za każdym razem od nowa.</figcaption>
       </figure>
-      <div class="b-kolumny">
-        <p>Nad wejściem wisi napis „Kawa to dopiero początek…". CIEkawa powstała z wieloletniego marzenia Angeliki i Daniela Jackowskich o miejscu, które łączy pasję do dobrej kawy z kulinarną kreatywnością.</p>
-        <p>Zawodowo są specjalistami w innych branżach, ale do gastronomii wracali od lat. Obaw nie mieli — wierzyli, że serce włożone w to, co robią, zostanie docenione.</p>
-        <p>Lokal mieści około 20 osób, a ogródek pozwala zjeść na świeżym powietrzu. Właściciele planują tu także wydarzenia kulturalne i warsztaty.</p>
-        <p>Znajdziesz go przy ulicy Mickiewicza, w sąsiedztwie Witryny Sztuki.</p>
-      </div>
+      <figure class="b-kafel">
+        <img src="../assets/img/fb-matcha.jpg" alt="Mrożona matcha i cannoli z pistacjami">
+        <figcaption>Matcha ubijana na miejscu</figcaption>
+      </figure>
+      <figure class="b-kafel">
+        <img src="../assets/img/fb-wypieki.jpg" alt="Latte i ciasta z malinami">
+        <figcaption>Ciasta pieczemy u siebie</figcaption>
+      </figure>
+      <figure class="b-kafel b-szeroki">
+        <img src="../assets/img/fb-sniadania.jpg" alt="Kanapka z wołowiną i sałatka w ogródku">
+        <figcaption>Śniadanie o szesnastej? Jasne. Nie mamy godziny granicznej.</figcaption>
+      </figure>
+      <figure class="b-kafel">
+        <img src="../assets/img/wlasciciele.jpg" alt="Angelika i Daniel przed lokalem">
+        <figcaption>Angelika i Daniel, założyciele</figcaption>
+      </figure>
+      <figure class="b-kafel">
+        <img src="../assets/img/fb-mrozona.jpg" alt="Mrożona kawa na wynos">
+        <figcaption>Na wynos też</figcaption>
+      </figure>
     </div>
+
+    <ul class="chips" style="margin-top:2em">
+      <li>≈ 20 miejsc + ogródek</li><li>Przyjazne dzieciom</li><li>Można z psem</li>
+      <li>Dobre do pracy</li><li>Opcje bezglutenowe</li>
+    </ul>
   </div>
 </section>
 
-<!-- ============================ C ============================ -->
+<!-- ======================= C ======================= -->
 <section class="section section--cream" data-wariant="C">
   <div class="wrap">
-    <div class="c-grid">
-      <div>
-        <p class="eyebrow">O nas</p>
-        <h2 class="h2">Rok, w którym wszystko się&nbsp;zaczęło.</h2>
-        <figure class="c-foto">
-          <img src="../assets/img/wlasciciele.jpg" alt="Angelika i Daniel Jackowscy przed lokalem">
-        </figure>
-        <p class="section__note">Angelika i Daniel Jackowscy — zawodowo z innych branż, do gastronomii wracali od lat.</p>
-      </div>
-      <ol class="c-os">
-        <li>
-          <span class="c-kiedy">Sierpień 2025</span>
-          <h3>Otwieramy przy Mickiewicza</h3>
-          <p>Spełnione marzenie o miejscu, które łączy pasję do dobrej kawy z kulinarną kreatywnością. Nad wejściem: „Kawa to dopiero początek…".</p>
-        </li>
-        <li>
-          <span class="c-kiedy">Wrzesień 2025</span>
-          <h3>Ziarno z gdańskiej palarni</h3>
-          <p>Speciality z ekspresu i chemexu, matcha ubijana na miejscu, autorskie wypieki i śniadania serwowane przez cały dzień.</p>
-        </li>
-        <li>
-          <span class="c-kiedy">Przez cały rok</span>
-          <h3>4,9 ★ w 220 opiniach</h3>
-          <p>Około 20 miejsc, ogródek, przyjazne dzieciom i psom. Miejsce, do którego goście wracają dla atmosfery i spotkań.</p>
-        </li>
-        <li class="teraz">
-          <span class="c-kiedy">28 sierpnia 2026</span>
-          <h3>Pierwsze urodziny</h3>
-          <p>Coffee Rave z DJ-em NOXY — pierwszy w Tarnobrzegu. To dopiero początek planów: wydarzenia kulturalne i warsztaty.</p>
-        </li>
-      </ol>
+    <div class="c-naglowek">
+      <p class="eyebrow">CIEkawa w liczbach</p>
+      <h2 class="h2">Rok temu nikt o&nbsp;nas nie&nbsp;słyszał.</h2>
     </div>
+
+    <div class="c-liczby">
+      <div><b>1 rok</b><span>Otwarci od sierpnia 2025. Pierwsze urodziny świętujemy 28 sierpnia.</span></div>
+      <div><b>4,9 ★</b><span>Średnia z 220 opinii w Google. Na Facebooku poleca nas 100% recenzentów.</span></div>
+      <div><b>≈ 20</b><span>Tyle osób mieści sala. Do tego ogródek od frontu, gdy pogoda pozwala.</span></div>
+      <div><b>20–40 zł</b><span>Typowy rachunek na osobę — potwierdzony przez 123 gości w Google.</span></div>
+      <div><b>2</b><span>Angelika i Daniel Jackowscy. Zawodowo z innych branż, tu z wieloletniego marzenia.</span></div>
+      <div><b>0</b><span>Godzin granicznych na śniadania. Jajka po turecku równie dobrze smakują po południu.</span></div>
+    </div>
+
+    <figure class="c-pas">
+      <img src="../assets/img/fb-kawa.jpg" alt="Dwie kawy z rozetą na stoliku wśród roślin">
+    </figure>
+    <p class="c-stopka">Za każdą z tych liczb stoi to samo: ziarno z gdańskiej palarni, matcha ubijana na miejscu i kuchnia, która lubi zaskakiwać połączeniami.</p>
   </div>
 </section>
 
-<!-- ============================ D ============================ -->
+<!-- ======================= D ======================= -->
 <section class="section section--cream" data-wariant="D">
   <div class="wrap">
-    <p class="eyebrow">O nas</p>
-    <h2 class="h2" style="max-width:16ch">Spełnione marzenie Angeliki i&nbsp;Daniela.</h2>
-    <div class="d-wrap">
-      <figure class="d-foto">
-        <img src="../assets/img/wlasciciele.jpg" alt="Angelika i Daniel Jackowscy przed lokalem">
-      </figure>
-      <div class="d-karta">
-        <p class="lead">Nad wejściem wisi napis „Kawa to dopiero początek…". To nie slogan — to opis planu.</p>
-        <p>CIEkawa powstała z wieloletniego marzenia <strong>Angeliki i Daniela Jackowskich</strong> o miejscu w Tarnobrzegu, które łączy pasję do dobrej kawy i jedzenia z kulinarną kreatywnością. Zawodowo są specjalistami w innych branżach, ale do gastronomii wracali od lat.</p>
-        <blockquote style="margin:1.6em 0;padding-left:22px;border-left:2px solid var(--amber)">
-          <p style="font-family:var(--serif);font-style:italic;font-size:1.2rem;line-height:1.35;margin:0 0 .4em">Chcieliśmy stworzyć miejsce, które będzie dla nas i naszych gości jak dom.</p>
-          <cite style="font-style:normal;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)">Angelika Jackowska</cite>
-        </blockquote>
-        <p>Lokal mieści około 20 osób, a ogródek pozwala zjeść na świeżym powietrzu — przy Mickiewicza, w sąsiedztwie Witryny Sztuki.</p>
-        <ul class="chips">
-          <li>Przyjazne dzieciom</li><li>Można z psem</li><li>Dobre do pracy</li>
-          <li>Opcje bezglutenowe</li><li>Catering</li>
-        </ul>
-      </div>
+    <p class="eyebrow">Krótka rozmowa</p>
+    <h2 class="h2" style="max-width:15ch">Trzy pytania do&nbsp;właścicieli.</h2>
+
+    <div class="d-lista">
+      <article class="d-poz">
+        <figure class="d-foto"><img src="../assets/img/wlasciciele.jpg" alt="Angelika i Daniel przed lokalem"></figure>
+        <div>
+          <h3 class="d-pyt">Dlaczego akurat kawiarnia?</h3>
+          <p class="d-odp">„Marzyliśmy o tym od dawna. Chcieliśmy stworzyć miejsce, które będzie dla nas i naszych gości jak dom, gdzie ludzie będą chcieli wracać dla atmosfery, smaku i spotkań."</p>
+          <p class="d-kto">Angelika Jackowska</p>
+        </div>
+      </article>
+
+      <article class="d-poz">
+        <figure class="d-foto"><img src="../assets/img/fb-wypieki.jpg" alt="Latte i ciasta z malinami"></figure>
+        <div>
+          <h3 class="d-pyt">Co u Was jest inne?</h3>
+          <p class="d-odp">Ziarno bierzemy z renomowanej palarni w Gdańsku i parzymy je z ekspresu albo z chemexu. Matchę ubijamy na miejscu. Ciasta i śniadania robimy sami, także w wersji bezglutenowej.</p>
+          <p class="d-kto">Daniel Jackowski</p>
+        </div>
+      </article>
+
+      <article class="d-poz">
+        <figure class="d-foto"><img src="../assets/img/fb-sniadania.jpg" alt="Kanapka z wołowiną i sałatka w ogródku"></figure>
+        <div>
+          <h3 class="d-pyt">Dla kogo jest CIEkawa?</h3>
+          <p class="d-odp">„Nie ograniczamy się do serwowania śniadań rano, bo kto powiedział, że nie można ich zjeść po południu?" Przychodzą do nas rodziny z dziećmi, ludzie z psami i tacy, którzy siadają z laptopem na dwie godziny. Wszyscy się mieszczą.</p>
+          <p class="d-kto">Angelika Jackowska</p>
+        </div>
+      </article>
     </div>
   </div>
 </section>
 
 <nav class="wybor" id="wybor" aria-label="Wybór wariantu">
-  <button type="button" data-cel="A" aria-pressed="true">A · portret</button>
-  <button type="button" data-cel="B" aria-pressed="false">B · cytat</button>
-  <button type="button" data-cel="C" aria-pressed="false">C · oś czasu</button>
-  <button type="button" data-cel="D" aria-pressed="false">D · karta</button>
+  <button type="button" data-cel="A" aria-pressed="true">A · opowieść</button>
+  <button type="button" data-cel="B" aria-pressed="false">B · mozaika</button>
+  <button type="button" data-cel="C" aria-pressed="false">C · liczby</button>
+  <button type="button" data-cel="D" aria-pressed="false">D · rozmowa</button>
 </nav>
 
 <script>
 (function(){
-  var nazwy={A:'A — portret pełnej wysokości',B:'B — cytat na pierwszym planie',
-             C:'C — oś czasu',D:'D — zdjęcie nachodzące na kartę'};
-  var przyciski=[].slice.call(document.querySelectorAll('.wybor button'));
+  var nazwy={A:'A — osobista opowieść, jedno duże zdjęcie',
+             B:'B — mozaika sześciu zdjęć z podpisami',
+             C:'C — liczby i fakty',
+             D:'D — trzy pytania, zdjęcia naprzemiennie'};
+  var b=[].slice.call(document.querySelectorAll('.wybor button'));
   function pokaz(cel){
     document.querySelectorAll('[data-wariant]').forEach(function(s){
-      s.classList.toggle('aktywny', s.dataset.wariant===cel);
-    });
-    przyciski.forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.cel===cel?'true':'false'); });
+      s.classList.toggle('aktywny', s.dataset.wariant===cel); });
+    b.forEach(function(x){ x.setAttribute('aria-pressed', x.dataset.cel===cel?'true':'false'); });
     document.getElementById('metka-nazwa').textContent=nazwy[cel];
     window.scrollTo(0,0);
-    location.hash=cel;
   }
-  przyciski.forEach(function(b){ b.addEventListener('click',function(){ pokaz(b.dataset.cel); }); });
+  b.forEach(function(x){ x.addEventListener('click',function(){ pokaz(x.dataset.cel); }); });
   document.addEventListener('keydown',function(e){
-    var i=przyciski.findIndex(function(b){return b.getAttribute('aria-pressed')==='true';});
-    if(e.key==='ArrowRight') pokaz(przyciski[(i+1)%przyciski.length].dataset.cel);
-    if(e.key==='ArrowLeft')  pokaz(przyciski[(i-1+przyciski.length)%przyciski.length].dataset.cel);
+    var i=b.findIndex(function(x){return x.getAttribute('aria-pressed')==='true';});
+    if(e.key==='ArrowRight') pokaz(b[(i+1)%b.length].dataset.cel);
+    if(e.key==='ArrowLeft')  pokaz(b[(i-1+b.length)%b.length].dataset.cel);
   });
-  var h=(location.hash||'#A').slice(1).toUpperCase();
-  pokaz(nazwy[h]?h:'A');
+  pokaz('A');
 })();
 </script>
 </body>
