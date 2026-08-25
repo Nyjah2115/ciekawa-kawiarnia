@@ -30,7 +30,7 @@
     [0.175, 0.215, 0.300, 0.350],
     [0.375, 0.415, 0.545, 0.600],
     [0.640, 0.680, 0.780, 0.825],
-    [0.860, 0.900, 1.000, 1.000]
+    [0.860, 0.900, 1.010, 1.020]   /* poza 1.0, żeby napis nie gasł na końcu scrolla */
   ];
 
   /* ---------- wczytywanie klatek ---------- */
@@ -59,7 +59,8 @@
       ready[i] = true;
       loaded++;
       if (fill) fill.style.width = Math.round((loaded / FRAMES) * 100) + '%';
-      if (!firstPainted) { firstPainted = true; draw(); }
+      if (!firstPainted) { firstPainted = true; lastKey = ''; render(shown); }
+      else if (!running) { lastKey = ''; render(shown); }
       if (loaded >= FRAMES) finishLoading();
       if (onDone) onDone();
     };
@@ -86,7 +87,6 @@
   }
 
   /* ---------- rysowanie ---------- */
-  var lastFrame = -1;
 
   function sizeCanvas() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -95,7 +95,7 @@
     canvas.height = Math.round(h * dpr);
     canvas.style.width  = w + 'px';
     canvas.style.height = h + 'px';
-    lastFrame = -1;
+    lastKey = '';
   }
 
   function nearestReady(i) {
@@ -114,32 +114,60 @@
     ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
   }
 
-  function progress() {
-    var top = section.offsetTop;
-    var travel = section.offsetHeight - sticky.clientHeight;
-    if (travel <= 0) return 0;
-    return Math.min(1, Math.max(0, (window.scrollY - top) / travel));
+  /* Geometria sekcji czytana raz, nie przy każdej klatce — odczyt offsetTop
+     w pętli renderowania wymuszałby przeliczenie layoutu 60 razy na sekundę. */
+  var geo = { top: 0, travel: 1 };
+  function measure() {
+    geo.top = section.offsetTop;
+    geo.travel = Math.max(1, section.offsetHeight - sticky.clientHeight);
   }
+
+  function rawProgress() {
+    return Math.min(1, Math.max(0, (window.scrollY - geo.top) / geo.travel));
+  }
+
+  function smoothstep(t) { return t * t * (3 - 2 * t); }
 
   function fade(p, b) {
     if (p <= b[0] || p >= b[3]) return 0;
-    if (p < b[1]) return (p - b[0]) / (b[1] - b[0] || 1);
-    if (p > b[2]) return 1 - (p - b[2]) / (b[3] - b[2] || 1);
+    if (p < b[1]) return smoothstep((p - b[0]) / (b[1] - b[0] || 1));
+    if (p > b[2]) return smoothstep(1 - (p - b[2]) / (b[3] - b[2] || 1));
     return 1;
   }
 
-  function draw() {
-    var p = progress();
+  /* ---------- renderowanie z podklatkową interpolacją ---------- */
+  var lastKey = '';
 
-    var want = Math.min(FRAMES - 1, Math.round(p * (FRAMES - 1)));
-    var use = nearestReady(want);
-    if (use !== -1 && use !== lastFrame) { paint(images[use]); lastFrame = use; }
+  function render(p) {
+    var f = p * (FRAMES - 1);
+    var i0 = Math.floor(f);
+    var frac = f - i0;
+    var i1 = Math.min(FRAMES - 1, i0 + 1);
+
+    var a = nearestReady(i0);
+    if (a !== -1) {
+      /* Mieszamy dwie sąsiednie klatki proporcjonalnie do pozycji między nimi.
+         96 klatek zaczyna wyglądać jak kilkaset — bez dobierania plików.
+         Mieszamy tylko, gdy obie klatki są dokładnie te, o które chodzi;
+         przy niedoczytanych zastępnikach dałoby to podwójną ekspozycję. */
+      var blend = (a === i0 && frac > 0.01 && ready[i1] && i1 !== i0);
+      var key = blend ? i0 + ':' + Math.round(frac * 100) : 'x' + a;
+      if (key !== lastKey) {
+        paint(images[a]);
+        if (blend) {
+          ctx.globalAlpha = frac;
+          paint(images[i1]);
+          ctx.globalAlpha = 1;
+        }
+        lastKey = key;
+      }
+    }
 
     for (var i = 0; i < beats.length; i++) {
       var o = fade(p, BEATS[i]);
       var el = beats[i];
       el.style.opacity = o;
-      el.style.transform = 'translateY(' + ((1 - o) * 26).toFixed(1) + 'px)';
+      el.style.transform = 'translate3d(0,' + ((1 - o) * 26).toFixed(2) + 'px,0)';
       el.classList.toggle('is-live', o > 0.9);
     }
 
@@ -148,12 +176,48 @@
     if (hint && p > 0.03) hint.classList.remove('is-ready');
   }
 
-  /* ---------- pętla ---------- */
-  var queued = false;
+  function draw() { measure(); shown = rawProgress(); lastKey = ''; render(shown); }
+
+  /* ---------- pętla: scroll ciągnie, obraz dopływa ---------- */
+  /* Kółko myszy przewija skokowo (~100 px na "klik"), więc numer klatki
+     przeskakiwałby o dwie–trzy naraz. Zamiast renderować pozycję scrolla
+     wprost, gonimy ją z tłumieniem — skok zamienia się w płynny dojazd. */
+  var shown = 0;          /* to, co widać */
+  var wanted = 0;         /* to, gdzie jest scroll */
+  var running = false;
+  var prevTs = 0;
+  var SMOOTHING = reduced ? 1 : 0.16;   /* 1 = bez tłumienia */
+
+  function tick(ts) {
+    var dt = prevTs ? Math.min(64, ts - prevTs) : 16.7;
+    prevTs = ts;
+
+    var diff = wanted - shown;
+    if (Math.abs(diff) < 0.0002) {
+      shown = wanted;
+      render(shown);
+      running = false;
+      prevTs = 0;
+      return;
+    }
+    /* Współczynnik zależny od czasu klatki, żeby tempo dojazdu było takie samo
+       na ekranie 60 Hz i 120 Hz. */
+    shown += diff * (1 - Math.pow(1 - SMOOTHING, dt / 16.7));
+    render(shown);
+    requestAnimationFrame(tick);
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    prevTs = 0;
+    requestAnimationFrame(tick);
+  }
+
   function onScroll() {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(function () { queued = false; draw(); });
+    wanted = rawProgress();
+    if (reduced) { shown = wanted; render(shown); return; }
+    start();
   }
 
   /* ---------- awaryjnie: samo wideo ---------- */
@@ -167,16 +231,18 @@
     fallback.addEventListener('loadedmetadata', function () {
       window.addEventListener('scroll', function () {
         var d = fallback.duration || 8;
-        fallback.currentTime = Math.min(d - 0.05, progress() * d);
+        fallback.currentTime = Math.min(d - 0.05, rawProgress() * d);
       }, { passive: true });
     });
   }
 
   /* ---------- start ---------- */
   sizeCanvas();
+  measure();
+  wanted = shown = rawProgress();
   load(0);
   preload();
-  draw();
+  render(shown);
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () { sizeCanvas(); draw(); }, { passive: true });
@@ -184,9 +250,9 @@
   /* Powrót do zakładki: requestAnimationFrame nie działa, gdy karta jest ukryta,
      więc po odzyskaniu widoczności wymuszamy jedno przerysowanie. */
   document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) { lastFrame = -1; draw(); }
+    if (!document.hidden) { draw(); }
   });
-  window.addEventListener('pageshow', function () { lastFrame = -1; draw(); });
+  window.addEventListener('pageshow', function () { draw(); });
   window.addEventListener('orientationchange', function () { setTimeout(function () { sizeCanvas(); draw(); }, 200); });
 
   /* Jeśli po 6 s nie udało się wczytać ani jednej klatki — pokaż wideo. */

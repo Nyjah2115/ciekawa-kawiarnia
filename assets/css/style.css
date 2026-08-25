@@ -158,8 +158,9 @@ a{color:inherit}
   max-width:660px;
   text-align:center;
   opacity:0;
-  transform:translateY(26px);
-  transition:opacity .1s linear;
+  transform:translate3d(0,26px,0);
+  /* Bez transition — opacity ustawia JS przy każdej klatce, a nakładka CSS
+     dokładałaby własne opóźnienie i walczyła z tłumieniem scrolla. */
   will-change:opacity,transform;
   pointer-events:none;
 }

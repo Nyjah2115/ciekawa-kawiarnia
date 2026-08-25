@@ -30,6 +30,13 @@ assets/img/poster.jpg   plakat/OG image
 na ekranie. Postęp scrolla mapuje się na numer klatki i na widoczność kolejnych
 napisów (tablica `BEATS` w `main.js`).
 
+Scroll nie steruje obrazem wprost. Kółko myszy przewija skokowo (~100 px na
+"klik"), co przy 96 klatkach na 4070 px oznaczałoby przeskok o 2–3 klatki naraz.
+Zamiast tego renderowana pozycja goni pozycję scrolla z tłumieniem (`SMOOTHING`
+w `main.js`), a dwie sąsiednie klatki są mieszane proporcjonalnie do pozycji
+między nimi — 96 plików wygląda jak kilkaset. Jeden "klik" kółka daje 22
+pośrednie stany zamiast 2–3, przy stabilnych 60 fps.
+
 Klatki, nie `<video>`, bo przewijanie `video.currentTime` szarpie przy szybkim
 scrollu. Klatki wczytują się progresywnie — najpierw co ósma, potem reszta —
 więc animacja działa zanim wszystko się pobierze. Gdy po 6 s nie wczyta się ani
