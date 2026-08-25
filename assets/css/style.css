@@ -398,6 +398,19 @@ a{color:inherit}
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);
 }
 .event{max-width:820px}
+/* Wariant z plakatem: grafika obok treści, pod sobą na wąskim ekranie. */
+.event--plakat{
+  max-width:100%;
+  display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+  gap:clamp(28px,5vw,64px);align-items:center;
+}
+@media (max-width:860px){ .event--plakat{grid-template-columns:1fr} }
+.event__poster{margin:0}
+.event__poster img{
+  width:100%;height:auto;border-radius:var(--r);
+  box-shadow:0 24px 60px rgba(42,33,26,.22);
+}
+.event__txt{min-width:0}
 .event__label{
   display:inline-flex;align-items:center;gap:9px;
   font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-ink);

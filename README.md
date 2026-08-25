@@ -100,23 +100,28 @@ przezroczystość, licząc alfę z luminancji piksela — krawędzie zostają g�
 
 ## Zdjęcia
 
-Materiały od kawiarni, przeskalowane przez `sips`:
+| Plik | Gdzie | Skąd |
+|---|---|---|
+| `fb-kawa.jpg` | slajd „Kawa speciality" | Facebook kawiarni |
+| `fb-matcha.jpg` | slajd „Matcha i herbaty" | Facebook kawiarni |
+| `fb-sniadania.jpg` | slajd „Śniadania" | Facebook kawiarni |
+| `fb-wypieki.jpg` | slajd „Wypieki i lunch" | Facebook kawiarni |
+| `fb-mrozona.jpg` | pas „Nasza kawa" | Facebook kawiarni |
+| `fb-rave.jpg` | sekcja urodzinowa — plakat Coffee Rave | Facebook kawiarni |
+| `wlasciciele.jpg` | „O nas", slajd „Ogródek i sala", `og:image` | od kawiarni |
+| `logo.png`, `logo-znak.png` | hero 2, nawigacja, stopka | od kawiarni |
 
-| Plik | Gdzie |
-|---|---|
-| `wlasciciele.jpg` | sekcja „O nas", slajd „Ogródek i sala", `og:image` |
-| `latte.jpg` | pas „Nasza kawa", slajd „Kawa speciality" |
-| `k-*.jpg` | slajdy karuzeli — stopklatki z `hero.mp4` (`tools/still.swift`) |
-| `logo.png` | hero i stopka |
-| `logo-znak.png` | nawigacja |
+Zdjęcia z Facebooka pobrane z publicznej galerii profilu w pełnej rozdzielczości
+(pominięcie parametru `ctp` w adresie CDN daje oryginał zamiast miniatury
+414 px), następnie przeskalowane przez `sips` do 900 px.
 
-Slajdy `k-matcha`, `k-ziarna` i `k-sernik` to stopklatki z wideo hero, czyli
-grafika wygenerowana w OpenArt — nie zdjęcia realnych dań CIEkawej. Do podmiany
-na prawdziwe fotografie karty, gdy tylko będą dostępne; slajd o śniadaniach jest
-najsłabiej dopasowany, bo pokazuje ziarna zamiast jedzenia.
+Wcześniejsze slajdy korzystały ze stopklatek wyciętych z wideo hero, czyli
+z grafiki wygenerowanej w OpenArt. Zostały zastąpione prawdziwymi zdjęciami dań
+i są dostępne w historii gita.
 
 **Prawa do zdjęć i zgoda właścicieli na wizerunek do potwierdzenia przed
-publikacją.**
+publikacją** — materiały pochodzą z profilu kawiarni, ale repozytorium jest
+publiczne.
 
 ## Skąd pochodzą dane
 
