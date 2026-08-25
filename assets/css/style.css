@@ -533,6 +533,28 @@ a{color:inherit}
 .contact__links a{color:var(--amber-ink);text-decoration:none;border-bottom:1px solid rgba(138,84,39,.35);padding-bottom:2px}
 .contact__links a:hover{color:var(--ink);border-bottom-color:var(--ink)}
 
+/* Profile społecznościowe — wyraźne przyciski, nie kolejny link w rzędzie. */
+.spolecz{display:flex;flex-wrap:wrap;gap:10px;margin-top:1.6em}
+.spolecz__btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:.62em 1.1em;border-radius:100px;
+  border:1px solid var(--line);background:var(--card);
+  color:var(--ink);text-decoration:none;font-size:.9rem;
+  transition:background .2s ease,border-color .2s ease,transform .2s ease;
+}
+.spolecz__btn:hover{background:#fff;border-color:rgba(42,33,26,.3);transform:translateY(-1px)}
+.spolecz__btn svg{flex:none;color:var(--amber-ink)}
+.spolecz__note{margin:1em 0 0;font-size:.85rem;color:var(--ink-mute)}
+
+.foot__spolecz{display:flex;gap:10px;margin:.4em 0 .2em}
+.foot__spolecz a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);color:var(--ink);
+  transition:background .2s ease,border-color .2s ease;
+}
+.foot__spolecz a:hover{background:var(--cream);border-color:rgba(42,33,26,.3)}
+
 .map{position:relative}
 .map iframe{width:100%;height:clamp(320px,46vh,470px);border:1px solid var(--line);border-radius:var(--r)}
 .map__btn{margin-top:16px}
