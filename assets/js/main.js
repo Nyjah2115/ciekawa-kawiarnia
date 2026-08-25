@@ -8,6 +8,57 @@
   var MOBILE_BREAK = 760;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- ekran startowy ---------- */
+  /* Logo nalewa się od dołu, potem tło rozjeżdża się na dwie połowy
+     i odsłania hero. Postęp jest wiązany z realnymi sygnałami (dane wideo,
+     window.load), ale ma podłogę czasową, żeby animacja nie mignęła,
+     i twardy sufit, żeby wolna sieć nie uwięziła nikogo na zasłonie. */
+  (function () {
+    var splash = document.getElementById('splash');
+    var fill = document.getElementById('splash-fill');
+    var root = document.documentElement;
+    if (!splash || !root.classList.contains('splash-on')) return;
+
+    var MIN = reduced ? 0 : 900;      /* zanim w ogóle wolno wyjść */
+    var MAX = 3500;                   /* najdłużej, niezależnie od wszystkiego */
+    var t0 = Date.now();
+    var pct = 0;
+    var wyszedl = false;
+
+    function set(p) {
+      pct = Math.max(pct, Math.min(100, p));
+      fill.style.height = pct + '%';
+    }
+
+    /* Powolne podchodzenie do 92%, żeby coś się działo także wtedy,
+       gdy przeglądarka nie raportuje po drodze żadnych zdarzeń. */
+    var crawl = setInterval(function () {
+      if (pct < 92) set(pct + (92 - pct) * 0.12 + 1);
+    }, 90);
+
+    function wyjdz() {
+      if (wyszedl) return;
+      wyszedl = true;
+      clearInterval(crawl);
+      set(100);
+      var czekaj = Math.max(0, MIN - (Date.now() - t0));
+      setTimeout(function () {
+        splash.classList.add('is-out');
+        root.classList.remove('splash-lock');          /* scroll wolny od razu */
+        setTimeout(function () {                        /* zasłona znika po animacji */
+          root.classList.remove('splash-on');
+        }, reduced ? 20 : 1050);
+      }, czekaj + (reduced ? 0 : 220));
+    }
+
+    /* Realne sygnały gotowości. */
+    var v = document.getElementById('hero-video');
+    if (v) v.addEventListener('loadeddata', function () { set(Math.max(pct, 70)); }, { once: true });
+    if (document.readyState === 'complete') wyjdz();
+    else window.addEventListener('load', wyjdz);
+    setTimeout(wyjdz, MAX);
+  })();
+
   /* ---------- wideo w hero ---------- */
   var video = document.getElementById('hero-video');
   if (video) {
