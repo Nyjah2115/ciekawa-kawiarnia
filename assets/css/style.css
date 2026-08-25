@@ -322,27 +322,39 @@ a{color:inherit}
   gap:clamp(32px,6vw,88px);align-items:start;
 }
 @media (max-width:860px){ .grid-2{grid-template-columns:1fr} }
-.col-sticky{position:sticky;top:104px}
-@media (max-width:860px){ .col-sticky{position:static} }
 
-/* --- O nas --- */
-.portret{margin:2.2em 0 0;max-width:340px}
-.portret img{width:100%;height:auto;border-radius:var(--r);box-shadow:0 18px 44px rgba(42,33,26,.16)}
-.portret figcaption{margin-top:.9em;font-size:.82rem;line-height:1.45;color:var(--ink-mute)}
-@media (max-width:860px){ .portret{max-width:100%} }
-
-.prose p{margin:0 0 1.15em}
-.prose blockquote{margin:2em 0;padding:0 0 0 26px;border-left:2px solid var(--amber)}
-.prose blockquote p{
-  font-family:var(--serif);font-size:1.32rem;line-height:1.35;font-style:italic;
-  margin:0 0 .55em;color:#3A2E24;
+/* --- O nas: trzy pytania do właścicieli --- */
+.rozmowa__naglowek{max-width:15ch}
+.rozmowa{
+  margin-top:clamp(32px,4vw,56px);
+  display:flex;flex-direction:column;gap:clamp(30px,4vw,56px);
 }
-.prose blockquote cite{font-style:normal;font-size:.83rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-mute)}
-
-.chips{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:2.2em 0 0}
-.chips li{
-  font-size:.84rem;padding:.42em 1em;border-radius:100px;
-  background:rgba(42,33,26,.045);border:1px solid var(--line);color:#3A2E24;
+/* Zdjęcia na przemian: nieparzyste po lewej, parzyste po prawej. */
+.rozmowa__poz{
+  display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);
+  gap:clamp(24px,4vw,54px);align-items:center;
+}
+.rozmowa__poz:nth-child(even){grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr)}
+.rozmowa__poz:nth-child(even) .rozmowa__foto{order:2}
+@media (max-width:800px){
+  .rozmowa__poz,.rozmowa__poz:nth-child(even){grid-template-columns:1fr}
+  .rozmowa__poz:nth-child(even) .rozmowa__foto{order:0}
+}
+.rozmowa__foto{margin:0}
+.rozmowa__foto img{
+  width:100%;height:clamp(200px,26vw,300px);object-fit:cover;
+  border-radius:var(--r);box-shadow:0 18px 44px rgba(42,33,26,.16);
+}
+.rozmowa__pyt{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(1.35rem,2.6vw,1.9rem);line-height:1.2;letter-spacing:-.015em;
+  margin:0 0 .55em;color:var(--ink);
+}
+.rozmowa__pyt::before{content:"— ";color:var(--amber)}
+.rozmowa__odp{margin:0 0 .9em;color:var(--ink-mute);line-height:1.65}
+.rozmowa__kto{
+  margin:0;font-size:.76rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--amber-ink);
 }
 
 /* --- Menu: karuzela 3D (coverflow) --- */
