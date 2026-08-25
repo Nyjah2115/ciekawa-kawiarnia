@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototyp — ekran startowy CIEkawej</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Inter:wght@300..600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F9F4E7; --ink:#2A211A; --ink-soft:rgba(42,33,26,.5);
+  --line:rgba(42,33,26,.14); --amber:#B0703A;
+  --sans:"Inter",system-ui,sans-serif; --serif:"Fraunces",Georgia,serif;
+  /* sterowane z panelu */
+  --zaslona:#F9F4E7;
+  --ghost:.11;
+  --rozsuwanie:1000ms;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#111;font-family:var(--sans);color:var(--ink);overflow:hidden}
+
+/* ---------- to, co jest pod zasłoną ---------- */
+.scena{position:fixed;inset:0;overflow:hidden}
+.scena video{width:100%;height:100%;object-fit:cover}
+.scena__tekst{
+  position:absolute;inset:0;display:grid;place-items:center;text-align:center;
+  color:#F9F4E7;padding:20px;
+}
+.scena__tekst h1{
+  font-family:var(--serif);font-weight:400;font-size:clamp(2rem,5.4vw,4rem);
+  letter-spacing:-.028em;margin:0;text-shadow:0 2px 30px rgba(10,7,5,.6);
+}
+
+/* ---------- zasłona ---------- */
+.splash{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:26px}
+.splash.znikniete{display:none}
+.panel{position:absolute;background:var(--zaslona);transition:transform var(--rozsuwanie) cubic-bezier(.76,0,.24,1)}
+
+/* pionowe rozsunięcie */
+[data-wariant="pion"] .panel{left:0;width:100%;height:50.2%}
+[data-wariant="pion"] .panel--a{top:0}
+[data-wariant="pion"] .panel--b{bottom:0}
+[data-wariant="pion"].wychodzi .panel--a{transform:translateY(-100%)}
+[data-wariant="pion"].wychodzi .panel--b{transform:translateY(100%)}
+
+/* poziome rozsunięcie */
+[data-wariant="poziom"] .panel{top:0;height:100%;width:50.2%}
+[data-wariant="poziom"] .panel--a{left:0}
+[data-wariant="poziom"] .panel--b{right:0}
+[data-wariant="poziom"].wychodzi .panel--a{transform:translateX(-100%)}
+[data-wariant="poziom"].wychodzi .panel--b{transform:translateX(100%)}
+
+/* przenikanie */
+[data-wariant="przenik"] .panel{inset:0;width:100%;height:100%;
+  transition:opacity var(--rozsuwanie) ease}
+[data-wariant="przenik"] .panel--b{display:none}
+[data-wariant="przenik"].wychodzi .panel--a{opacity:0}
+
+/* powiększenie i zanik */
+[data-wariant="zoom"] .panel{inset:0;width:100%;height:100%;
+  transition:transform var(--rozsuwanie) cubic-bezier(.7,0,.3,1),opacity var(--rozsuwanie) ease}
+[data-wariant="zoom"] .panel--b{display:none}
+[data-wariant="zoom"].wychodzi .panel--a{transform:scale(1.35);opacity:0}
+
+/* odsłona kołowa */
+[data-wariant="kolo"] .panel{inset:0;width:100%;height:100%;
+  clip-path:circle(150% at 50% 50%);
+  transition:clip-path var(--rozsuwanie) cubic-bezier(.76,0,.24,1)}
+[data-wariant="kolo"] .panel--b{display:none}
+[data-wariant="kolo"].wychodzi .panel--a{clip-path:circle(0% at 50% 50%)}
+
+.znak{position:relative;z-index:2;width:clamp(150px,20vw,215px);
+  opacity:0;transform:scale(.94);
+  animation:wejscie .8s cubic-bezier(.22,1,.36,1) forwards;
+  transition:opacity .55s ease,transform var(--rozsuwanie) cubic-bezier(.76,0,.24,1)}
+@keyframes wejscie{to{opacity:1;transform:scale(1)}}
+.znak__tlo{width:100%;height:auto;opacity:var(--ghost);display:block}
+.znak__wrap{position:absolute;left:0;bottom:0;width:100%;height:0;overflow:hidden;
+  transition:height .45s cubic-bezier(.33,1,.68,1)}
+.znak__pelne{position:absolute;left:0;bottom:0;width:100%;height:auto}
+.splash.wychodzi .znak{opacity:0;transform:scale(1.12)}
+/* bez nalewania logo po prostu jest w całości */
+.bez-nalewania .znak__tlo{opacity:0}
+.bez-nalewania .znak__wrap{height:100% !important}
+
+.etykieta{position:relative;z-index:2;font-size:.66rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--ink-soft);transition:opacity .4s ease}
+.splash.wychodzi .etykieta{opacity:0}
+.bez-etykiety .etykieta{display:none}
+
+/* ---------- panel sterowania ---------- */
+.pulpit{
+  position:fixed;z-index:99;right:16px;top:16px;width:290px;max-height:calc(100vh - 32px);
+  overflow:auto;background:rgba(255,253,246,.97);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;
+  box-shadow:0 18px 50px rgba(20,14,10,.28);font-size:13px;
+}
+.pulpit h2{font-family:var(--serif);font-weight:400;font-size:1.15rem;margin:0 0 2px}
+.pulpit .hint{margin:0 0 14px;color:var(--ink-soft);font-size:11.5px;line-height:1.45}
+.grupa{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.grupa:last-of-type{border-bottom:none}
+.grupa > label{display:block;font-weight:500;margin-bottom:7px}
+.wart{float:right;font-weight:400;color:var(--amber);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--amber)}
+.radio{display:flex;flex-wrap:wrap;gap:6px}
+.radio label{
+  font-size:12px;padding:5px 10px;border:1px solid var(--line);border-radius:100px;
+  cursor:pointer;background:#fff;
+}
+.radio input{position:absolute;opacity:0;pointer-events:none}
+.radio input:checked + span{color:#fff}
+.radio label:has(input:checked){background:var(--ink);border-color:var(--ink);color:#fff}
+.przelacz{display:flex;align-items:center;gap:8px;font-weight:400;margin-bottom:7px}
+.odtworz{
+  width:100%;padding:11px;border:none;border-radius:100px;background:var(--ink);color:var(--cream);
+  font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;margin-top:4px;
+}
+.odtworz:hover{background:#40332A}
+.podsum{margin:10px 0 0;font-size:11.5px;line-height:1.5;color:var(--ink-soft)}
+.podsum b{color:var(--ink);font-weight:500}
+@media (max-width:720px){ .pulpit{right:8px;left:8px;width:auto;top:8px} }
+</style>
+</head>
+<body>
+
+<div class="scena">
+  <video autoplay muted loop playsinline poster="../assets/img/poster.jpg" src="../assets/video/hero-540.mp4"></video>
+  <div class="scena__tekst"><h1>Kawa to dopiero początek.</h1></div>
+</div>
+
+<div class="splash" id="splash" data-wariant="pion">
+  <i class="panel panel--a"></i>
+  <i class="panel panel--b"></i>
+  <div class="znak" id="znak">
+    <img class="znak__tlo" src="../assets/img/logo.png" alt="">
+    <span class="znak__wrap" id="wrap"><img class="znak__pelne" src="../assets/img/logo.png" alt=""></span>
+  </div>
+  <span class="etykieta" id="etykieta">parzymy stronę…</span>
+</div>
+
+<form class="pulpit" id="pulpit" onsubmit="return false">
+  <h2>Ekran startowy</h2>
+  <p class="hint">Prototyp do klikania — nic tu nie idzie na stronę. Zmień, co chcesz, i powiedz mi, która wersja ma wejść.</p>
+
+  <div class="grupa">
+    <label>Wyjście na stronę</label>
+    <div class="radio" id="wariant">
+      <label><input type="radio" name="w" value="pion" checked><span>rozsunięcie w pionie</span></label>
+      <label><input type="radio" name="w" value="poziom"><span>w poziomie</span></label>
+      <label><input type="radio" name="w" value="kolo"><span>odsłona kołowa</span></label>
+      <label><input type="radio" name="w" value="zoom"><span>powiększenie</span></label>
+      <label><input type="radio" name="w" value="przenik"><span>przenikanie</span></label>
+    </div>
+  </div>
+
+  <div class="grupa">
+    <label>Ile trwa zasłona <span class="wart" id="v-trwa">1400 ms</span></label>
+    <input type="range" id="trwa" min="500" max="3500" step="100" value="1400">
+  </div>
+
+  <div class="grupa">
+    <label>Tempo rozsuwania <span class="wart" id="v-roz">1000 ms</span></label>
+    <input type="range" id="roz" min="300" max="2000" step="50" value="1000">
+  </div>
+
+  <div class="grupa">
+    <label class="przelacz"><input type="checkbox" id="nalew" checked> Logo nalewa się od dołu</label>
+    <label>Krycie tła logo <span class="wart" id="v-ghost">11%</span></label>
+    <input type="range" id="ghost" min="0" max="40" step="1" value="11">
+  </div>
+
+  <div class="grupa">
+    <label>Kolor zasłony</label>
+    <div class="radio" id="kolor">
+      <label><input type="radio" name="k" value="#F9F4E7" checked><span>krem</span></label>
+      <label><input type="radio" name="k" value="#2A211A"><span>ciemny</span></label>
+      <label><input type="radio" name="k" value="#FFFFFF"><span>biały</span></label>
+    </div>
+  </div>
+
+  <div class="grupa">
+    <label class="przelacz"><input type="checkbox" id="napis" checked> Napis pod logo</label>
+    <input type="text" id="napisTxt" value="parzymy stronę…" style="width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:8px;font-family:var(--sans);font-size:12px">
+  </div>
+
+  <button class="odtworz" id="odtworz" type="button">Odtwórz ponownie</button>
+  <p class="podsum" id="podsum"></p>
+</form>
+
+<script>
+(function(){
+  var splash=document.getElementById('splash'), wrap=document.getElementById('wrap'),
+      znak=document.getElementById('znak'), etyk=document.getElementById('etykieta'),
+      podsum=document.getElementById('podsum'), root=document.documentElement;
+  var timery=[];
+
+  function czysc(){ timery.forEach(clearTimeout); timery=[]; }
+  function po(ms,f){ timery.push(setTimeout(f,ms)); }
+
+  function ustawienia(){
+    return {
+      wariant: document.querySelector('input[name=w]:checked').value,
+      trwa: +document.getElementById('trwa').value,
+      roz: +document.getElementById('roz').value,
+      nalew: document.getElementById('nalew').checked,
+      ghost: +document.getElementById('ghost').value,
+      kolor: document.querySelector('input[name=k]:checked').value,
+      napis: document.getElementById('napis').checked,
+      napisTxt: document.getElementById('napisTxt').value
+    };
+  }
+
+  function odtworz(){
+    czysc();
+    var u=ustawienia();
+    root.style.setProperty('--zaslona',u.kolor);
+    root.style.setProperty('--ghost',(u.ghost/100).toFixed(2));
+    root.style.setProperty('--rozsuwanie',u.roz+'ms');
+    splash.dataset.wariant=u.wariant;
+    splash.classList.toggle('bez-nalewania',!u.nalew);
+    splash.classList.toggle('bez-etykiety',!u.napis);
+    etyk.textContent=u.napisTxt;
+    /* na ciemnej zasłonie napis musi być jasny, a logo i tak jest ciemną kreską */
+    var ciemna = u.kolor==='#2A211A';
+    etyk.style.color = ciemna ? 'rgba(249,244,231,.55)' : '';
+    znak.style.filter = ciemna ? 'brightness(0) invert(1)' : '';
+
+    splash.classList.remove('znikniete','wychodzi');
+    wrap.style.transition='none'; wrap.style.height='0%';
+    znak.style.animation='none'; void znak.offsetWidth;
+    znak.style.animation='';
+    po(20,function(){ wrap.style.transition=''; });
+
+    /* nalewanie rozłożone na czas trwania zasłony */
+    if(u.nalew){
+      var kroki=14;
+      for(var i=1;i<=kroki;i++){
+        (function(i){ po(u.trwa*i/kroki*0.92, function(){ wrap.style.height=(i/kroki*100)+'%'; }); })(i);
+      }
+    }
+
+    po(u.trwa, function(){
+      splash.classList.add('wychodzi');
+      po(u.roz+60, function(){ splash.classList.add('znikniete'); });
+    });
+
+    podsum.innerHTML='Zasłona: <b>'+u.trwa+' ms</b> · rozsuwanie: <b>'+u.roz+
+      ' ms</b> · razem <b>'+(u.trwa+u.roz)+' ms</b>';
+  }
+
+  document.getElementById('odtworz').addEventListener('click',odtworz);
+  document.getElementById('pulpit').addEventListener('input',function(e){
+    document.getElementById('v-trwa').textContent=document.getElementById('trwa').value+' ms';
+    document.getElementById('v-roz').textContent=document.getElementById('roz').value+' ms';
+    document.getElementById('v-ghost').textContent=document.getElementById('ghost').value+'%';
+    odtworz();
+  });
+  document.getElementById('pulpit').addEventListener('change',odtworz);
+  odtworz();
+})();
+</script>
+</body>
+</html>
