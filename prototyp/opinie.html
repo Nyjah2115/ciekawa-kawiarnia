@@ -87,6 +87,47 @@ body{padding-bottom:80px}
 .d-mur .op.jest{opacity:1;transform:none;
   transition:opacity .5s ease,transform .75s cubic-bezier(.25,1.5,.45,1)}
 @media (prefers-reduced-motion:reduce){ .d-mur .op{opacity:1;transform:none} }
+
+/* ============ E — pływające zdjęcia wokół treści ============ */
+.e-scena{position:relative;max-width:1180px;margin-inline:auto;
+  padding:clamp(90px,13vw,150px) var(--pad);min-height:min(88vh,760px)}
+.e-foto{position:absolute;border-radius:14px;overflow:hidden;
+  box-shadow:0 18px 44px rgba(42,33,26,.22);
+  opacity:0;transform:scale(.5);
+  transition:opacity .5s ease, transform .75s cubic-bezier(.25,1.6,.45,1);
+  will-change:transform;
+}
+.e-foto.jest{opacity:1;transform:scale(1)}
+.e-foto img{width:100%;height:100%;object-fit:cover;display:block;
+  animation:unosi var(--czas,7s) ease-in-out var(--zwloka,0s) infinite alternate}
+.e-foto:hover{z-index:20}
+.e-foto:hover img{transform:scale(1.08);transition:transform .3s ease}
+@keyframes unosi{from{transform:translateY(0)}to{transform:translateY(var(--skok,-14px))}}
+@media (prefers-reduced-motion:reduce){
+  .e-foto{opacity:1;transform:none;transition:none}
+  .e-foto img{animation:none}
+}
+.e-tresc{position:relative;z-index:10;display:flex;flex-direction:column;
+  align-items:center;text-align:center}
+.e-plakietka{display:inline-block;border-radius:100px;background:rgba(42,33,26,.07);
+  border:1px solid var(--line);padding:.4em 1em;font-size:.78rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--amber-ink);margin-bottom:1.2em}
+.e-tytul{font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.1rem,5.2vw,3.9rem);line-height:1.04;letter-spacing:-.026em;
+  margin:0 0 .4em;max-width:16ch;text-wrap:balance}
+.e-opis{max-width:34rem;font-size:1.06rem;color:var(--ink-mute);margin:0 0 1.8em}
+.e-cta{display:inline-flex;align-items:center;gap:.5em;padding:.85em 1.6em;
+  border-radius:100px;background:var(--ink);color:var(--cream);text-decoration:none;
+  font-size:.95rem;font-weight:500;transition:background .25s ease,transform .25s ease}
+.e-cta:hover{background:#40332A;transform:translateY(-1px)}
+.e-cta svg{transition:transform .25s ease}
+.e-cta:hover svg{transform:translateX(3px)}
+/* Na wąskim ekranie zostaje kilka zdjęć, reszta znika — inaczej wchodzą pod tekst. */
+.e-foto[data-mob="nie"]{display:none}
+.e-foto[data-mobonly]{display:block}
+@media (min-width:760px){ .e-foto[data-mob="nie"]{display:block} .e-foto[data-mobonly]{display:none} }
+@media (min-width:1100px){ .e-foto[data-lg="tak"]{display:block} }
+.e-foto[data-lg="tak"]{display:none}
 </style>
 </head>
 <body>
@@ -193,11 +234,41 @@ body{padding-bottom:80px}
   </div>
 </section>
 
+
+<!-- ================= E ================= -->
+<section class="section section--cream" data-w="E" style="padding:0">
+  <div class="e-scena" id="e-scena">
+    <figure class="e-foto" style="top:5%;left:5%;width:124px;height:124px" data-mob="nie"><img src="../assets/img/fb-kawa.jpg" alt="Dwie kawy z rozetą"></figure>
+    <figure class="e-foto" style="top:14%;left:23%;width:92px;height:92px" data-mob="nie" data-lg="tak"><img src="../assets/img/fb-wypieki.jpg" alt="Latte i ciasta z malinami"></figure>
+    <figure class="e-foto" style="top:6%;right:26%;width:96px;height:96px" data-mob="nie" data-lg="tak"><img src="../assets/img/fb-matcha.jpg" alt="Mrożona matcha z cannoli"></figure>
+    <figure class="e-foto" style="top:10%;right:4%;width:128px;height:146px" data-mob="nie"><img src="../assets/img/wlasciciele.jpg" alt="Ogródek przed lokalem"></figure>
+    <figure class="e-foto" style="top:43%;left:1%;width:122px;height:122px" data-mob="nie"><img src="../assets/img/fb-sniadania.jpg" alt="Kanapka z sałatką"></figure>
+    <figure class="e-foto" style="top:47%;right:1%;width:108px;height:126px" data-mob="nie"><img src="../assets/img/fb-mrozona.jpg" alt="Mrożona kawa na wynos"></figure>
+    <figure class="e-foto" style="bottom:6%;left:17%;width:104px;height:104px" data-mob="nie"><img src="../assets/img/fb-wypieki.jpg" alt="Sernik i latte"></figure>
+    <figure class="e-foto" style="bottom:8%;right:19%;width:98px;height:98px" data-mob="nie"><img src="../assets/img/fb-kawa.jpg" alt="Kawa z rozetą"></figure>
+    <figure class="e-foto" style="top:6%;left:2%;width:80px;height:80px" data-mobonly><img src="../assets/img/fb-kawa.jpg" alt="Kawa z rozetą"></figure>
+    <figure class="e-foto" style="top:3%;right:3%;width:86px;height:96px" data-mobonly><img src="../assets/img/wlasciciele.jpg" alt="Ogródek"></figure>
+    <figure class="e-foto" style="bottom:5%;left:4%;width:88px;height:88px" data-mobonly><img src="../assets/img/fb-matcha.jpg" alt="Matcha"></figure>
+    <figure class="e-foto" style="bottom:9%;right:2%;width:78px;height:78px" data-mobonly><img src="../assets/img/fb-sniadania.jpg" alt="Śniadanie"></figure>
+
+    <div class="e-tresc">
+      <span class="e-plakietka">Opinie</span>
+      <h2 class="e-tytul">Goście wracają. I&nbsp;piszą, dlaczego.</h2>
+      <p class="e-opis">4,9 na 5 w 220 opiniach Google, 100% poleceń na Facebooku. Za każdą oceną stoi kawa, śniadanie albo kawałek sernika.</p>
+      <a class="e-cta" href="https://www.google.com/maps/place/CIEkawa+KAWIARNIA/@50.5705876,21.6706132,17z" target="_blank" rel="noopener">
+        Przeczytaj opinie
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
 <nav class="wybor" aria-label="Wybór wariantu">
   <button type="button" data-cel="A" aria-pressed="true">A · wstęga</button>
   <button type="button" data-cel="B" aria-pressed="false">B · liczniki</button>
   <button type="button" data-cel="C" aria-pressed="false">C · pojedyncza</button>
   <button type="button" data-cel="D" aria-pressed="false">D · ściana</button>
+  <button type="button" data-cel="E" aria-pressed="false">E · pływające</button>
 </nav>
 
 <script>
@@ -248,6 +319,16 @@ body{padding-bottom:80px}
     });
     sekcja.querySelectorAll('[data-do]').forEach(licz);
     sekcja.querySelectorAll('[data-gw]').forEach(gwiazdki);
+    /* E: każde zdjęcie dostaje własne tempo i skok, żeby unosiły się
+       niezależnie, a nie zgodnym chórem. */
+    sekcja.querySelectorAll('.e-foto').forEach(function(f,i){
+      f.classList.remove('jest');
+      f.style.setProperty('--czas', (5 + (i % 5) * 0.9).toFixed(1) + 's');
+      f.style.setProperty('--zwloka', (-(i * 0.7)).toFixed(1) + 's');
+      f.style.setProperty('--skok', (-(9 + (i % 4) * 5)) + 'px');
+      setTimeout(function(){ f.classList.add('jest'); }, maloRuchu ? 0 : 90 + i * 85);
+    });
+
     var karty = sekcja.querySelectorAll('.b-karty .op, .d-mur .op');
     karty.forEach(function(k,i){
       k.classList.remove('jest');
@@ -287,7 +368,7 @@ body{padding-bottom:80px}
 
   var przyciski=[].slice.call(document.querySelectorAll('.wybor button'));
   var nazwy={A:'A — przewijająca się wstęga',B:'B — liczniki i wjeżdżające karty',
-             C:'C — jedna opinia naraz',D:'D — ściana kafli'};
+             C:'C — jedna opinia naraz',D:'D — ściana kafli',E:'E — pływające zdjęcia wokół treści'};
   function pokaz(c){
     document.querySelectorAll('[data-w]').forEach(function(s){s.classList.toggle('aktywny',s.dataset.w===c)});
     przyciski.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.cel===c?'true':'false')});
