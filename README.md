@@ -21,8 +21,30 @@ assets/js/main.js       silnik scroll-scrubbingu
 assets/frames/lg/       96 klatek 1280 px  (desktop, ~6,8 MB)
 assets/frames/sm/       48 klatek  760 px  (telefon,  ~1,9 MB)
 assets/video/hero.mp4   źródłowe wideo 1920×1080, 8 s (fallback)
-assets/img/poster.jpg   plakat/OG image
+assets/img/               zdjęcia lokalu i logo
+tools/seq.swift           wycinanie klatek z wideo
+tools/logo.swift          wycinanie logo i usuwanie tła
 ```
+
+## Zdjęcia
+
+Materiały od kawiarni, przeskalowane przez `sips`:
+
+| Plik | Gdzie | Uwagi |
+|---|---|---|
+| `wlasciciele.jpg` | sekcja „O nas", też jako `og:image` | Angelika i Daniel przed lokalem |
+| `latte.jpg` | pas „Nasza kawa" między menu a urodzinami | |
+| `logo.png` | stopka | tło wycięte, kreska w jednym kolorze |
+| `logo-znak.png` | nawigacja | sam znak, bez napisu |
+
+Logo jest ciemną kreską na przezroczystym tle. Na ciemnych sekcjach podaje je
+CSS: `filter: brightness(0) invert(1)` spłaszcza kreskę do czerni i wywraca na
+krem, więc ten sam plik zadziała na dowolnym tle bez robienia wersji na biało.
+Krem strony (`--cream`) to `#F9F4E7`, czyli dokładny kolor tła z oryginalnego
+pliku logo.
+
+**Prawa do zdjęć i zgoda właścicieli na wizerunek do potwierdzenia przed
+publikacją.**
 
 ## Jak działa hero
 

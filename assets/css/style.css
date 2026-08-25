@@ -5,7 +5,7 @@
 :root{
   --espresso:#12100E;
   --espresso-deep:#0A0908;
-  --cream:#F5EFE6;
+  --cream:#F9F4E7;
   --paper:#EDE3D5;
   --amber:#C9884A;
   --amber-soft:#E0AF7C;
@@ -103,9 +103,13 @@ a{color:inherit}
   border-bottom-color:rgba(245,239,230,.1);
 }
 .nav__brand{
+  display:flex;align-items:center;gap:9px;
   text-decoration:none;font-family:var(--serif);font-size:1.22rem;letter-spacing:-.01em;
   margin-right:auto;
 }
+/* Logo jest ciemną kreską na przezroczystym tle — brightness(0) spłaszcza je
+   do czerni, invert(1) wywraca na krem, więc jeden plik pasuje do ciemnego tła. */
+.nav__logo{height:26px;width:auto;filter:brightness(0) invert(1);opacity:.92}
 .nav__mark{color:var(--amber);font-weight:600}
 .nav__word{font-weight:300}
 .nav__links{display:flex;gap:26px}
@@ -228,6 +232,16 @@ a{color:inherit}
 @media (max-width:860px){ .col-sticky{position:static} }
 
 /* --- O nas --- */
+.portret{margin:2.2em 0 0;max-width:340px}
+.portret img{
+  width:100%;height:auto;border-radius:var(--r);
+  box-shadow:0 18px 44px rgba(33,27,22,.16);
+}
+.portret figcaption{
+  margin-top:.9em;font-size:.82rem;line-height:1.45;color:var(--on-cream-mute);
+}
+@media (max-width:860px){ .portret{max-width:100%} }
+
 .prose p{margin:0 0 1.15em}
 .prose blockquote{
   margin:2em 0;padding:0 0 0 26px;
@@ -289,6 +303,25 @@ a{color:inherit}
   margin:2.6em 0 0;font-size:.94rem;color:var(--on-dark-mute);max-width:640px;
 }
 .menu__foot a{color:var(--amber-soft)}
+
+/* --- Pas ze zdjęciem --- */
+.section--band{background:#0F0D0B;border-top:1px solid rgba(245,239,230,.08)}
+.band{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:clamp(28px,5vw,72px);align-items:center;
+}
+@media (max-width:820px){ .band{grid-template-columns:1fr} }
+.band__shot{margin:0}
+.band__shot img{
+  width:100%;height:auto;border-radius:var(--r);
+  box-shadow:0 24px 60px rgba(0,0,0,.5);
+}
+.band__claim{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(1.5rem,3vw,2.15rem);line-height:1.22;letter-spacing:-.015em;
+  margin:0 0 .8em;text-wrap:balance;
+}
+.band__sub{margin:0;color:var(--on-dark-mute);font-size:1rem}
 
 /* --- Urodziny --- */
 .section--event{
@@ -378,8 +411,11 @@ a{color:inherit}
 /* --- Stopka --- */
 .foot{background:var(--espresso-deep);padding:60px 0;border-top:1px solid rgba(245,239,230,.09)}
 .foot__inner{display:flex;flex-direction:column;gap:.5em;align-items:center;text-align:center}
-.foot__brand{font-family:var(--serif);font-size:1.4rem;margin:0}
-.foot__brand span{color:var(--amber);font-weight:600}
+.foot__logo{
+  width:clamp(160px,26vw,208px);height:auto;
+  filter:brightness(0) invert(1);opacity:.9;
+  margin-bottom:.6em;
+}
 .foot__claim{margin:0;color:var(--on-dark-mute)}
 .foot__meta{margin:.6em 0 0;font-size:.85rem;color:rgba(245,239,230,.38)}
 
