@@ -167,8 +167,20 @@ a{color:inherit}
 .nav__brand{
   display:flex;align-items:center;gap:9px;
   text-decoration:none;font-family:var(--serif);font-size:1.22rem;letter-spacing:-.01em;
-  margin-right:auto;color:var(--ink);
+  color:var(--ink);
 }
+/* Profile przy sygnaturze, w lewym górnym rogu. Odstęp na prawo przejmuje
+   ten blok, bo to on domyka lewą stronę paska. */
+.nav__spolecz{display:flex;align-items:center;gap:4px;margin-right:auto}
+.nav__spolecz a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:50%;color:var(--ink);
+  opacity:.72;transition:opacity .2s ease,background .2s ease;
+}
+.nav__spolecz a:hover{opacity:1;background:rgba(42,33,26,.07)}
+.nav:not(.is-stuck) .nav__spolecz a{color:var(--cream)}
+.nav:not(.is-stuck) .nav__spolecz a:hover{background:rgba(249,244,231,.16)}
+@media (max-width:480px){ .nav__spolecz{display:none} }
 /* Logo jest ciemną kreską na przezroczystym tle, a strona ma kolor jego
    oryginalnego tła — żadnego filtra nie potrzeba. */
 .nav__logo{height:26px;width:auto;transition:filter .35s ease}
