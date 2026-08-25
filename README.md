@@ -29,9 +29,15 @@ tools/shrink.swift        mniejsza wersja wideo (AVFoundation, bez ffmpeg)
 
 ## Hero
 
-Zapętlone wideo odtwarzane samo z siebie, w kadrze wtopionym w dół pierwszego
-ekranu. Tekst i logo siedzą nad nim na czystym kremie, więc nic nie walczy
-o kontrast z obrazem.
+Zapętlone wideo odtwarzane samo z siebie, na cały ekran. Na wideo leży kremowa
+zasłona: gęsta u góry, gdzie stoi logo i nagłówek, przejaśniona w pasie
+środkowo-dolnym, żeby było widać ruch, i znów pełna przy krawędzi — hero wtapia
+się w kremową sekcję pod spodem.
+
+Teksty w hero mają ciemniejsze odcienie niż reszta strony (`.hero__sub`,
+`.hero .eyebrow`), bo leżą na obrazie, nie na czystym kremie. Przy najcieńszym
+miejscu zasłony i najciemniejszym kadrze kontrast wynosi 9,3 dla nagłówka,
+6,5 dla podtytułu i 5,0 dla nadtytułu.
 
 Źródło wideo ustawia JS zależnie od szerokości ekranu — telefon dostaje wersję
 540p zamiast 1080p. `<source media>` już nie działa w przeglądarkach, stąd wybór

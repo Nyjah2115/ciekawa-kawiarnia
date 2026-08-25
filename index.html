@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@300..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=2">
+<link rel="stylesheet" href="assets/css/style.css?v=3">
 
 <script type="application/ld+json">
 {
@@ -73,6 +73,14 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
+  <!-- Źródło ustawia JS zależnie od szerokości ekranu: telefon nie musi
+       ciągnąć wersji 1080p. Bez JS zostaje poster, więc kadr i tak jest. -->
+  <video class="hero__video" id="hero-video"
+         autoplay muted loop playsinline preload="auto"
+         poster="assets/img/poster.jpg"
+         aria-label="Ziarna kawy, przelew z chemexu, ubijana matcha i latte z sernikiem baskijskim"></video>
+  <div class="hero__scrim"></div>
+
   <div class="wrap hero__inner">
     <img class="hero__logo" src="assets/img/logo.png" alt="CIEkawa Kawiarnia" width="760" height="661">
     <p class="eyebrow">Tarnobrzeg · ul. Mickiewicza 16</p>
@@ -83,15 +91,6 @@
       <a class="btn btn--ghost" href="#kontakt">Dojazd i godziny</a>
     </div>
   </div>
-
-  <figure class="hero__stage">
-    <!-- Źródło ustawia JS zależnie od szerokości ekranu: telefon nie musi
-         ciągnąć wersji 1080p. Bez JS zostaje poster, więc kadr i tak jest. -->
-    <video class="hero__video" id="hero-video"
-           autoplay muted loop playsinline preload="auto"
-           poster="assets/img/poster.jpg"
-           aria-label="Ziarna kawy, przelew z chemexu, ubijana matcha i latte z sernikiem baskijskim"></video>
-  </figure>
 
   <a class="hero__hint" href="#o-nas"><span>przewiń</span><i></i></a>
 </section>
@@ -313,6 +312,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=2"></script>
+<script src="assets/js/main.js?v=3"></script>
 </body>
 </html>
