@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CIEkawa Kawiarnia — Tarnobrzeg | Kawa speciality, matcha i śniadania cały dzień</title>
 <meta name="description" content="CIEkawa Kawiarnia przy Mickiewicza 16 w Tarnobrzegu. Kawa speciality z gdańskiej palarni, matcha, autorskie wypieki i śniadania serwowane przez cały dzień. 4,9★ w 220 opiniach Google.">
-<meta name="theme-color" content="#14100D">
+<meta name="theme-color" content="#F9F4E7">
 <link rel="canonical" href="https://ciekawa-kawiarnia.pl/">
 
 <meta property="og:type" content="restaurant.restaurant">
@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@300..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v=2">
 
 <script type="application/ld+json">
 {
@@ -71,62 +71,36 @@
 
 <main id="tresc">
 
-<!-- ============ HERO: wideo sterowane scrollem ============ -->
-<section class="scrollytelling" id="top" aria-label="Wprowadzenie">
-  <div class="sticky">
-    <canvas id="hero-canvas" aria-hidden="true"></canvas>
-    <video id="hero-fallback" playsinline muted loop preload="metadata" aria-hidden="true"></video>
-    <div class="sticky__scrim"></div>
-
-    <div class="stage">
-      <article class="beat" data-beat="0">
-        <p class="eyebrow">CIEkawa Kawiarnia · Tarnobrzeg</p>
-        <h1 class="beat__title">Kawa to dopiero&nbsp;początek.</h1>
-        <p class="beat__sub">Przewiń, żeby zobaczyć resztę.</p>
-      </article>
-
-      <article class="beat" data-beat="1">
-        <h2 class="beat__title">Ziarno z gdańskiej&nbsp;palarni.</h2>
-        <p class="beat__sub">Speciality z ekspresu albo z chemexu — tak, jak lubisz.</p>
-      </article>
-
-      <article class="beat" data-beat="2">
-        <h2 class="beat__title">Matcha, która nie udaje&nbsp;kawy.</h2>
-        <p class="beat__sub">Ubijana na miejscu. Późnym latem tropikalna — marakuja i pomarańcza.</p>
-      </article>
-
-      <article class="beat" data-beat="3">
-        <h2 class="beat__title">Sernik baskijski i śniadanie o&nbsp;16:00.</h2>
-        <p class="beat__sub">Bo kto powiedział, że jajka po turecku je się tylko rano.</p>
-      </article>
-
-      <article class="beat beat--final" data-beat="4">
-        <h2 class="beat__title">Zostań dłużej, niż&nbsp;planowałeś.</h2>
-        <p class="beat__sub">ul. Mickiewicza 16 · 4,9 ★ w 220 opiniach Google</p>
-        <div class="beat__actions">
-          <a class="btn btn--solid" href="#menu">Zobacz, co pijemy i jemy</a>
-          <a class="btn btn--ghost" href="#kontakt">Dojazd i godziny</a>
-        </div>
-      </article>
-    </div>
-
-    <div class="hint" id="hint" aria-hidden="true">
-      <span>przewiń</span>
-      <i></i>
-    </div>
-
-    <div class="loader" id="loader" role="status">
-      <span class="loader__bar"><i id="loader-fill"></i></span>
-      <span class="loader__txt">parzymy kadry…</span>
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero__inner">
+    <img class="hero__logo" src="assets/img/logo.png" alt="CIEkawa Kawiarnia" width="760" height="661">
+    <p class="eyebrow">Tarnobrzeg · ul. Mickiewicza 16</p>
+    <h1 class="hero__title">Kawa to dopiero&nbsp;początek.</h1>
+    <p class="hero__sub">Speciality z gdańskiej palarni, matcha ubijana na miejscu i&nbsp;śniadania, które nie kończą się o&nbsp;jedenastej.</p>
+    <div class="hero__actions">
+      <a class="btn btn--solid" href="#menu">Zobacz, co pijemy i jemy</a>
+      <a class="btn btn--ghost" href="#kontakt">Dojazd i godziny</a>
     </div>
   </div>
+
+  <figure class="hero__stage">
+    <!-- Źródło ustawia JS zależnie od szerokości ekranu: telefon nie musi
+         ciągnąć wersji 1080p. Bez JS zostaje poster, więc kadr i tak jest. -->
+    <video class="hero__video" id="hero-video"
+           autoplay muted loop playsinline preload="auto"
+           poster="assets/img/poster.jpg"
+           aria-label="Ziarna kawy, przelew z chemexu, ubijana matcha i latte z sernikiem baskijskim"></video>
+  </figure>
+
+  <a class="hero__hint" href="#o-nas"><span>przewiń</span><i></i></a>
 </section>
 
 <!-- ============ O NAS ============ -->
 <section class="section section--cream" id="o-nas">
   <div class="wrap grid-2">
     <div class="col-sticky">
-      <p class="eyebrow eyebrow--dark">O nas</p>
+      <p class="eyebrow">O nas</p>
       <h2 class="h2">Spełnione marzenie Angeliki i&nbsp;Daniela.</h2>
       <figure class="portret">
         <img src="assets/img/wlasciciele.jpg" alt="Angelika i Daniel Jackowscy przy stoliku w ogródku CIEkawej Kawiarni" width="897" height="1200" loading="lazy" decoding="async">
@@ -156,7 +130,7 @@
 </section>
 
 <!-- ============ MENU ============ -->
-<section class="section section--dark" id="menu">
+<section class="section section--tint" id="menu">
   <div class="wrap">
     <header class="section__head">
       <p class="eyebrow">Co u nas znajdziesz</p>
@@ -249,10 +223,10 @@
 <!-- ============ OPINIE ============ -->
 <section class="section section--cream" id="opinie">
   <div class="wrap">
-    <header class="section__head section__head--dark">
-      <p class="eyebrow eyebrow--dark">Opinie</p>
+    <header class="section__head">
+      <p class="eyebrow">Opinie</p>
       <h2 class="h2">4,9 na 5 — w 220 opiniach Google.</h2>
-      <p class="section__note section__note--dark">Na Facebooku poleca nas 100% recenzentów. Poniżej fragmenty tego, co goście napisali sami.</p>
+      <p class="section__note">Na Facebooku poleca nas 100% recenzentów. Poniżej fragmenty tego, co goście napisali sami.</p>
     </header>
 
     <div class="rating">
@@ -289,7 +263,7 @@
 </section>
 
 <!-- ============ KONTAKT ============ -->
-<section class="section section--dark" id="kontakt">
+<section class="section section--tint" id="kontakt">
   <div class="wrap grid-2 contact">
     <div>
       <p class="eyebrow">Odwiedź nas</p>
@@ -339,6 +313,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js"></script>
+<script src="assets/js/main.js?v=2"></script>
 </body>
 </html>

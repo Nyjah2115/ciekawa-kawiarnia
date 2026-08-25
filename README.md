@@ -1,7 +1,8 @@
 # CIEkawa Kawiarnia — landing page
 
-Jednostronicowa strona kawiarni CIEkawa (ul. Adama Mickiewicza 16, Tarnobrzeg)
-z hero sterowanym scrollem: przewijanie strony przewija wideo klatka po klatce.
+Jednostronicowa strona kawiarni CIEkawa (ul. Adama Mickiewicza 16, Tarnobrzeg).
+
+**Na żywo:** https://nyjah2115.github.io/ciekawa-kawiarnia/
 
 ## Uruchomienie
 
@@ -15,66 +16,49 @@ katalog na dowolny hosting.
 ## Struktura
 
 ```
-index.html              treść + dane strukturalne JSON-LD (schema.org/CafeOrCoffeeShop)
-assets/css/style.css    style
-assets/js/main.js       silnik scroll-scrubbingu
-assets/frames/lg/       96 klatek 1280 px  (desktop, ~6,8 MB)
-assets/frames/sm/       48 klatek  760 px  (telefon,  ~1,9 MB)
-assets/video/hero.mp4   źródłowe wideo 1920×1080, 8 s (fallback)
-assets/img/               zdjęcia lokalu i logo
+index.html                treść + dane strukturalne JSON-LD (schema.org/CafeOrCoffeeShop)
+assets/css/style.css      style
+assets/js/main.js         wybór źródła wideo + stan nawigacji
+assets/video/hero.mp4     wideo hero 1920×1080, 8 s
+assets/video/hero-540.mp4 lżejsza wersja na telefony
+assets/img/               zdjęcia lokalu, logo, plakat wideo
 tools/seq.swift           wycinanie klatek z wideo
 tools/logo.swift          wycinanie logo i usuwanie tła
+tools/shrink.swift        mniejsza wersja wideo (AVFoundation, bez ffmpeg)
 ```
+
+## Hero
+
+Zapętlone wideo odtwarzane samo z siebie, w kadrze wtopionym w dół pierwszego
+ekranu. Tekst i logo siedzą nad nim na czystym kremie, więc nic nie walczy
+o kontrast z obrazem.
+
+Źródło wideo ustawia JS zależnie od szerokości ekranu — telefon dostaje wersję
+540p zamiast 1080p. `<source media>` już nie działa w przeglądarkach, stąd wybór
+w skrypcie. Bez JS zostaje plakat z atrybutu `poster`, więc kadr i tak jest.
+
+## Motyw i logo
+
+Tło strony (`--cream`) to `#F9F4E7` — dokładny kolor tła z oryginalnego pliku
+logo. Dzięki temu logo leży na kolorze, dla którego zostało zaprojektowane,
+i nie trzeba go nigdzie przefarbowywać filtrem.
+
+`tools/logo.swift` wycina kadr z pliku źródłowego i zamienia jednolite tło na
+przezroczystość, licząc alfę z luminancji piksela — krawędzie zostają gładkie.
 
 ## Zdjęcia
 
 Materiały od kawiarni, przeskalowane przez `sips`:
 
-| Plik | Gdzie | Uwagi |
-|---|---|---|
-| `wlasciciele.jpg` | sekcja „O nas", też jako `og:image` | Angelika i Daniel przed lokalem |
-| `latte.jpg` | pas „Nasza kawa" między menu a urodzinami | |
-| `logo.png` | stopka | tło wycięte, kreska w jednym kolorze |
-| `logo-znak.png` | nawigacja | sam znak, bez napisu |
-
-Logo jest ciemną kreską na przezroczystym tle. Na ciemnych sekcjach podaje je
-CSS: `filter: brightness(0) invert(1)` spłaszcza kreskę do czerni i wywraca na
-krem, więc ten sam plik zadziała na dowolnym tle bez robienia wersji na biało.
-Krem strony (`--cream`) to `#F9F4E7`, czyli dokładny kolor tła z oryginalnego
-pliku logo.
+| Plik | Gdzie |
+|---|---|
+| `wlasciciele.jpg` | sekcja „O nas", też jako `og:image` |
+| `latte.jpg` | pas „Nasza kawa" |
+| `logo.png` | hero i stopka |
+| `logo-znak.png` | nawigacja |
 
 **Prawa do zdjęć i zgoda właścicieli na wizerunek do potwierdzenia przed
 publikacją.**
-
-## Jak działa hero
-
-`.scrollytelling` ma wysokość 600vh, a w środku `position: sticky` trzyma canvas
-na ekranie. Postęp scrolla mapuje się na numer klatki i na widoczność kolejnych
-napisów (tablica `BEATS` w `main.js`).
-
-Scroll nie steruje obrazem wprost. Kółko myszy przewija skokowo (~100 px na
-"klik"), co przy 96 klatkach na 4070 px oznaczałoby przeskok o 2–3 klatki naraz.
-Zamiast tego renderowana pozycja goni pozycję scrolla z tłumieniem (`SMOOTHING`
-w `main.js`), a dwie sąsiednie klatki są mieszane proporcjonalnie do pozycji
-między nimi — 96 plików wygląda jak kilkaset. Jeden "klik" kółka daje 22
-pośrednie stany zamiast 2–3, przy stabilnych 60 fps.
-
-Klatki, nie `<video>`, bo przewijanie `video.currentTime` szarpie przy szybkim
-scrollu. Klatki wczytują się progresywnie — najpierw co ósma, potem reszta —
-więc animacja działa zanim wszystko się pobierze. Gdy po 6 s nie wczyta się ani
-jedna klatka, strona przełącza się na `hero.mp4`.
-
-Telefon dostaje o połowę mniej klatek w mniejszej rozdzielczości.
-
-## Wymiana wideo
-
-1. Podmień `assets/video/hero.mp4`.
-2. Wytnij klatki (skrypt w `tools/seq.swift`):
-   ```bash
-   swift tools/seq.swift assets/video/hero.mp4 assets/frames/lg 96 1280 0.52
-   swift tools/seq.swift assets/video/hero.mp4 assets/frames/sm 48 760  0.55
-   ```
-3. Dopasuj zakresy w tablicy `BEATS` w `assets/js/main.js` do nowych scen.
 
 ## Skąd pochodzą dane
 
@@ -90,7 +74,11 @@ Telefon dostaje o połowę mniej klatek w mniejszej rozdzielczości.
 (Google podaje 9–18, artykuł z 2025 r. mówił o 9–19 i sobocie do 20),
 ceny i skład karty, oraz zgoda na wykorzystanie cytatów z opinii.
 
-Mapa to OpenStreetMap — nie wymaga klucza API ani zgody na cookies. Żeby wrócić
-do Google Maps, podmień `src` iframe'a w sekcji `#kontakt`.
+Mapa to OpenStreetMap — nie wymaga klucza API ani zgody na cookies.
 
 Wideo hero wygenerowane w OpenArt (PixVerse V6, 1080p, 8 s).
+
+## Uwaga o cache
+
+Odwołania do `style.css` i `main.js` mają znacznik `?v=`. Po zmianie tych
+plików podbij numer, inaczej powracający goście dostaną wersję z cache.
