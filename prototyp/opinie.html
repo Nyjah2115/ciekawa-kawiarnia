@@ -97,16 +97,26 @@ body{padding-bottom:80px}
 .e-foto{position:absolute;margin:0;
   animation:unosi var(--czas,7s) ease-in-out var(--zwloka,0s) infinite alternate;
   will-change:transform}
-.e-foto__in{display:block;width:100%;height:100%;
-  border-radius:14px;overflow:hidden;
-  box-shadow:0 18px 44px rgba(42,33,26,.22);
+.e-foto__in{display:block;width:100%;
+  border-radius:14px;
+  background:var(--card);border:1px solid var(--line);
+  box-shadow:0 16px 38px rgba(42,33,26,.16);
+  padding:16px 18px;
   opacity:0;transform:scale(.5);
   transition:opacity .5s ease, transform .75s cubic-bezier(.25,1.6,.45,1);
 }
 .e-foto.jest .e-foto__in{opacity:1;transform:scale(1)}
-.e-foto img{width:100%;height:100%;object-fit:cover;display:block}
 .e-foto:hover{z-index:20}
-.e-foto.jest:hover .e-foto__in{transform:scale(1.07);transition:transform .3s ease}
+.e-foto.jest:hover .e-foto__in{transform:scale(1.05);transition:transform .3s ease}
+.e-gw{display:block;color:var(--amber);font-size:.75rem;letter-spacing:.1em;margin-bottom:.5em}
+.e-cyt{font-family:var(--serif);font-size:.95rem;line-height:1.38;color:#2C231C;margin:0 0 .7em}
+.e-kto{font-size:.72rem;color:var(--ink);margin:0}
+.e-kto span{color:var(--ink-mute)}
+/* Kafle z samą liczbą — mniejsze, dla odmiany rytmu. */
+.e-foto--licz .e-foto__in{text-align:center;padding:18px 16px}
+.e-licz{display:block;font-family:var(--serif);font-weight:400;font-size:1.7rem;line-height:1;
+  color:var(--ink);margin-bottom:.2em}
+.e-licz-op{font-size:.72rem;color:var(--ink-mute);line-height:1.35}
 @keyframes unosi{from{transform:translateY(0)}to{transform:translateY(var(--skok,-14px))}}
 @media (prefers-reduced-motion:reduce){
   .e-foto{animation:none}
@@ -128,11 +138,16 @@ body{padding-bottom:80px}
 .e-cta svg{transition:transform .25s ease}
 .e-cta:hover svg{transform:translateX(3px)}
 /* Na wąskim ekranie zostaje kilka zdjęć, reszta znika — inaczej wchodzą pod tekst. */
+/* Kolejność ma znaczenie: reguły bazowe najpierw, media queries po nich —
+   inaczej display:none dla szerokiego ekranu wygrywa i kafle nigdy nie wchodzą. */
 .e-foto[data-mob="nie"]{display:none}
-.e-foto[data-mobonly]{display:block}
-@media (min-width:760px){ .e-foto[data-mob="nie"]{display:block} .e-foto[data-mobonly]{display:none} }
-@media (min-width:1100px){ .e-foto[data-lg="tak"]{display:block} }
 .e-foto[data-lg="tak"]{display:none}
+.e-foto[data-mobonly]{display:block}
+@media (min-width:760px){
+  .e-foto[data-mob="nie"]{display:block}
+  .e-foto[data-mobonly]{display:none}
+}
+@media (min-width:1100px){ .e-foto[data-lg="tak"]{display:block} }
 </style>
 </head>
 <body>
@@ -243,18 +258,15 @@ body{padding-bottom:80px}
 <!-- ================= E ================= -->
 <section class="section section--cream" data-w="E" style="padding:0">
   <div class="e-scena" id="e-scena">
-    <figure class="e-foto" style="top:5%;left:5%;width:124px;height:124px" data-mob="nie"><span class="e-foto__in"><img src="../assets/img/fb-kawa.jpg" alt="Dwie kawy z rozetą"></span></figure>
-    <figure class="e-foto" style="top:14%;left:23%;width:92px;height:92px" data-mob="nie" data-lg="tak"><span class="e-foto__in"><img src="../assets/img/fb-wypieki.jpg" alt="Latte i ciasta z malinami"></span></figure>
-    <figure class="e-foto" style="top:6%;right:26%;width:96px;height:96px" data-mob="nie" data-lg="tak"><span class="e-foto__in"><img src="../assets/img/fb-matcha.jpg" alt="Mrożona matcha z cannoli"></span></figure>
-    <figure class="e-foto" style="top:10%;right:4%;width:128px;height:146px" data-mob="nie"><span class="e-foto__in"><img src="../assets/img/wlasciciele.jpg" alt="Ogródek przed lokalem"></span></figure>
-    <figure class="e-foto" style="top:43%;left:1%;width:122px;height:122px" data-mob="nie"><span class="e-foto__in"><img src="../assets/img/fb-sniadania.jpg" alt="Kanapka z sałatką"></span></figure>
-    <figure class="e-foto" style="top:47%;right:1%;width:108px;height:126px" data-mob="nie"><span class="e-foto__in"><img src="../assets/img/fb-mrozona.jpg" alt="Mrożona kawa na wynos"></span></figure>
-    <figure class="e-foto" style="bottom:6%;left:17%;width:104px;height:104px" data-mob="nie"><span class="e-foto__in"><img src="../assets/img/fb-wypieki.jpg" alt="Sernik i latte"></span></figure>
-    <figure class="e-foto" style="bottom:8%;right:19%;width:98px;height:98px" data-mob="nie"><span class="e-foto__in"><img src="../assets/img/fb-kawa.jpg" alt="Kawa z rozetą"></span></figure>
-    <figure class="e-foto" style="top:6%;left:2%;width:80px;height:80px" data-mobonly><span class="e-foto__in"><img src="../assets/img/fb-kawa.jpg" alt="Kawa z rozetą"></span></figure>
-    <figure class="e-foto" style="top:3%;right:3%;width:86px;height:96px" data-mobonly><span class="e-foto__in"><img src="../assets/img/wlasciciele.jpg" alt="Ogródek"></span></figure>
-    <figure class="e-foto" style="bottom:5%;left:4%;width:88px;height:88px" data-mobonly><span class="e-foto__in"><img src="../assets/img/fb-matcha.jpg" alt="Matcha"></span></figure>
-    <figure class="e-foto" style="bottom:9%;right:2%;width:78px;height:78px" data-mobonly><span class="e-foto__in"><img src="../assets/img/fb-sniadania.jpg" alt="Śniadanie"></span></figure>
+    <figure class="e-foto" style="top:2%;left:1%;width:232px" data-mob="nie"><span class="e-foto__in"><span class="e-gw">★★★★★</span><p class="e-cyt">„Ale perełka na mapie Tarnobrzegu — tu wszystko ma sens!”</p><p class="e-kto">Anna K. <span>· Google</span></p></span></figure>
+    <figure class="e-foto e-foto--licz" style="top:6%;left:27%;width:132px" data-mob="nie" data-lg="tak"><span class="e-foto__in"><span class="e-licz">4,9 ★</span><span class="e-licz-op">średnia z 220 opinii</span></span></figure>
+    <figure class="e-foto" style="top:3%;right:2%;width:236px" data-mob="nie"><span class="e-foto__in"><span class="e-gw">★★★★★</span><p class="e-cyt">„Pyszne śniadania, wyborne ciasta i świetna kawa.”</p><p class="e-kto">Claudia K. <span>· lokalny przewodnik</span></p></span></figure>
+    <figure class="e-foto" style="top:40%;left:0;width:224px" data-mob="nie"><span class="e-foto__in"><span class="e-gw">★★★★★</span><p class="e-cyt">„Obydwie kawy sztos! Zero posmaku chemii, czysta przyjemność.”</p><p class="e-kto">Marek D. <span>· lokalny przewodnik</span></p></span></figure>
+    <figure class="e-foto e-foto--licz" style="top:44%;right:1%;width:126px" data-mob="nie" data-lg="tak"><span class="e-foto__in"><span class="e-licz">100%</span><span class="e-licz-op">poleca na Facebooku</span></span></figure>
+    <figure class="e-foto" style="bottom:4%;left:12%;width:240px" data-mob="nie"><span class="e-foto__in"><span class="e-gw">★★★★★</span><p class="e-cyt">„Przytulne miejsce na kawę speciality. Espresso tonic idealne.”</p><p class="e-kto"><span>opinia w Google</span></p></span></figure>
+    <figure class="e-foto" style="bottom:6%;right:8%;width:228px" data-mob="nie"><span class="e-foto__in"><span class="e-gw">★★★★★</span><p class="e-cyt">„Pierwszego dnia jedliśmy pyszne kanapki — wróciliśmy kolejnego dnia.”</p><p class="e-kto">Anna K. <span>· Google</span></p></span></figure>
+    <figure class="e-foto" style="top:2%;left:2%;width:190px" data-mobonly><span class="e-foto__in"><span class="e-gw">★★★★★</span><p class="e-cyt">„Ale perełka na mapie Tarnobrzegu!”</p><p class="e-kto">Anna K. <span>· Google</span></p></span></figure>
+    <figure class="e-foto" style="bottom:3%;right:2%;width:196px" data-mobonly><span class="e-foto__in"><span class="e-gw">★★★★★</span><p class="e-cyt">„Pyszne śniadania, wyborne ciasta i świetna kawa.”</p><p class="e-kto">Claudia K. <span>· Google</span></p></span></figure>
 
     <div class="e-tresc">
       <span class="e-plakietka">Opinie</span>
@@ -330,7 +342,7 @@ body{padding-bottom:80px}
       f.classList.remove('jest');
       f.style.setProperty('--czas', (5 + (i % 5) * 0.9).toFixed(1) + 's');
       f.style.setProperty('--zwloka', (-(i * 0.7)).toFixed(1) + 's');
-      f.style.setProperty('--skok', (-(9 + (i % 4) * 5)) + 'px');
+      f.style.setProperty('--skok', (-(7 + (i % 4) * 3)) + 'px');
       setTimeout(function(){ f.classList.add('jest'); }, maloRuchu ? 0 : 90 + i * 85);
     });
 
