@@ -76,6 +76,79 @@ a{color:inherit}
 .btn--pill:hover{background:#40332A}
 
 /* ===========================================================
+   EKRAN STARTOWY
+   =========================================================== */
+:root{
+  --logo-zanik:280ms;         /* jak szybko gaśnie logo */
+  --logo-wyprzedzenie:160ms;  /* o ile wcześniej znika, niż rusza zasłona */
+  --rozsuwanie:1000ms;
+}
+/* Domyślnie ukryty. Pokazuje go dopiero klasa dopisana przez skrypt,
+   więc bez JS strona po prostu startuje bez ekranu powitalnego. */
+.splash{display:none}
+/* Widoczność i blokada scrolla to osobne klasy: blokadę zdejmujemy na starcie
+   wyjścia, a widoczność dopiero po animacji — inaczej zasłona znikałaby
+   natychmiast i nie byłoby czego oglądać. */
+.splash-lock{overflow:hidden}
+.splash-on .splash{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+  position:fixed;inset:0;z-index:999;
+}
+/* Dwie połowy tła rozjeżdżają się na wyjściu i odsłaniają hero.
+   Ruszają z opóźnieniem, żeby logo zdążyło zejść pierwsze. */
+.splash__panel{
+  position:absolute;left:0;width:100%;height:50.2%;
+  background:var(--cream);
+  transition:transform var(--rozsuwanie) cubic-bezier(.76,0,.24,1) var(--logo-wyprzedzenie);
+}
+.splash__panel--top{top:0}
+.splash__panel--bot{bottom:0}
+
+/* Wejście przez klasę, nie przez @keyframes z forwards. Animacja z fill-mode
+   nadpisuje opacity ustawiane przejściem, przez co logo nie dawało się wygasić
+   i wisiało nad odsłoniętą stroną aż do display:none. */
+.splash__mark{
+  position:relative;z-index:2;
+  width:clamp(150px,20vw,215px);
+  opacity:0;transform:scale(.94);
+}
+.splash-on .splash.is-in .splash__mark{
+  opacity:1;transform:scale(1);
+  transition:opacity .8s cubic-bezier(.22,1,.36,1),
+             transform .8s cubic-bezier(.22,1,.36,1);
+}
+.splash__ghost{width:100%;height:auto;opacity:.11}
+/* Pełne logo przycięte od dołu — rośnie jak nalewana kawa. */
+.splash__fillwrap{
+  position:absolute;left:0;bottom:0;width:100%;height:0;
+  overflow:hidden;
+  transition:height .45s cubic-bezier(.33,1,.68,1);
+}
+.splash__fill{position:absolute;left:0;bottom:0;width:100%;height:auto}
+
+.splash__label{
+  position:relative;z-index:2;
+  font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-soft);
+  transition:opacity var(--logo-zanik) ease;
+}
+
+/* Reguła wyjścia stoi po regule wejścia (ta sama specyficzność — wygrywa
+   późniejsza) i sama narzuca krótszy czas, inaczej odziedziczyłaby 0,8 s. */
+.splash.is-out .splash__panel--top{transform:translateY(-100%)}
+.splash.is-out .splash__panel--bot{transform:translateY(100%)}
+.splash-on .splash.is-out .splash__mark{
+  opacity:0;transform:scale(1.06);
+  transition:opacity var(--logo-zanik) ease,
+             transform var(--logo-zanik) cubic-bezier(.4,0,.2,1);
+}
+.splash.is-out .splash__label{opacity:0}
+
+@media (prefers-reduced-motion:reduce){
+  .splash__panel,.splash__mark,.splash__fillwrap,.splash__label{transition-duration:.01ms}
+}
+
+/* ===========================================================
    NAV
    =========================================================== */
 .nav{

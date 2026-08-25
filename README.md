@@ -27,6 +27,40 @@ tools/logo.swift          wycinanie logo i usuwanie tła
 tools/shrink.swift        mniejsza wersja wideo (AVFoundation, bez ffmpeg)
 ```
 
+## Ekran startowy
+
+Przy wejściu kremowa zasłona z logo. Logo „nalewa się" od dołu (kopia w 11%
+krycia pod spodem, na niej pełna wersja przycinana rosnącym kontenerem), potem
+gaśnie, a 160 ms po nim tło pęka na dwie połowy rozjeżdżające się w górę i w dół.
+
+Kolejność jest istotna: logo schodzi **przed** zasłoną. Gdy gasło równolegle,
+wisiało nad już odsłoniętą stroną. Wejście logo idzie przez klasę, nie przez
+`@keyframes … forwards` — animacja z fill-mode nadpisuje `opacity` ustawiane
+przejściem, więc reguła wyjścia nigdy nie dochodziła do skutku.
+
+Czasy trzymane w zmiennych CSS (`--logo-zanik`, `--logo-wyprzedzenie`,
+`--rozsuwanie`) i powtórzone w `main.js`, bo skrypt musi wiedzieć, kiedy zdjąć
+zasłonę. Przy zmianie jednego trzeba poprawić drugie.
+
+Postęp jest wiązany z realnymi sygnałami (`loadeddata` wideo, `window.load`),
+z podłogą 1400 ms, żeby animacja nie mignęła, i sufitem 3,5 s, żeby wolna sieć
+nikogo nie uwięziła na zasłonie.
+
+**Wideo czeka na pierwszej klatce**, dopóki zasłona nie ruszy — inaczej leciałoby
+pod spodem i po odsłonięciu byłoby już kilka sekund do przodu. Atrybut `autoplay`
+zostaje w HTML dla przeglądarek bez JS, a skrypt zatrzymuje wideo i cofa je na
+zero; gdy metadane jeszcze nie doszły, przypisanie `currentTime` przepada, więc
+powtarzamy je po `loadedmetadata`.
+
+Dwie osobne klasy na `<html>`: `splash-lock` blokuje scroll i schodzi już na
+starcie rozsuwania, `splash-on` odpowiada za widoczność i schodzi dopiero po
+animacji. Klasę dopisuje wbudowany skrypt w `<head>`, przed pierwszym
+malowaniem — strona nie mignie pod zasłoną, a bez JS ekran w ogóle się nie
+pojawia i nic nie zostaje na wierzchu.
+
+Warianty wyjścia do porównania są w `prototyp/ekran-startowy.html` na gałęzi
+`prototyp-ekran-startowy` (katalog jest w `.gitignore`, nie trafia na Pages).
+
 ## Hero
 
 Zapętlone wideo na cały ekran, w naturalnym kolorze — bez filtrów i bez

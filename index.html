@@ -17,7 +17,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@300..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=7">
+<link rel="stylesheet" href="assets/css/style.css?v=9">
+<script>document.documentElement.className+=" splash-on splash-lock";</script>
 
 <script type="application/ld+json">
 {
@@ -54,6 +55,20 @@
 <body>
 
 <a class="skip" href="#tresc">Przejdź do treści</a>
+
+<!-- Ekran startowy. Widoczny tylko przy włączonym JS (klasa .splash-on),
+     żeby bez skryptu nie został na stałe na wierzchu. -->
+<div class="splash" id="splash" role="status" aria-live="polite" aria-label="Wczytywanie strony">
+  <i class="splash__panel splash__panel--top"></i>
+  <i class="splash__panel splash__panel--bot"></i>
+  <div class="splash__mark" id="splash-mark">
+    <img class="splash__ghost" src="assets/img/logo.png" alt="CIEkawa Kawiarnia" width="760" height="661">
+    <span class="splash__fillwrap" id="splash-fill">
+      <img class="splash__fill" src="assets/img/logo.png" alt="" aria-hidden="true" width="760" height="661">
+    </span>
+  </div>
+  <span class="splash__label">parzymy stronę…</span>
+</div>
 
 <header class="nav" id="nav">
   <a class="nav__brand" href="#top">
@@ -381,6 +396,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=7"></script>
+<script src="assets/js/main.js?v=9"></script>
 </body>
 </html>

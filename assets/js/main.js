@@ -1,6 +1,6 @@
 /* ===========================================================
    CIEkawa Kawiarnia
-   Hero to zapętlone wideo odtwarzane samo z siebie.
+   Ekran startowy, potem hero z zapętlonym wideo.
    =========================================================== */
 (function () {
   'use strict';
@@ -10,6 +10,14 @@
 
   /* ---------- wideo w hero ---------- */
   var video = document.getElementById('hero-video');
+  var wolnoGrac = false;   /* wideo czeka, aż zasłona ruszy */
+
+  function graj() {
+    if (!video || !wolnoGrac || reduced) return;
+    var p = video.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+
   if (video) {
     /* Źródło dobierane po szerokości ekranu, a nie przez <source media>,
        bo przeglądarki przestały honorować media na źródłach wideo.
@@ -18,23 +26,86 @@
       ? 'assets/video/hero-540.mp4'
       : 'assets/video/hero.mp4';
 
+    /* Atrybut autoplay zostaje w HTML dla przeglądarek bez JS, ale tutaj
+       zatrzymujemy wideo na pierwszej klatce — inaczej leciałoby pod zasłoną
+       i po odsłonięciu byłoby już kilka sekund do przodu. */
+    var cofnij = function () {
+      try { video.pause(); video.currentTime = 0; } catch (e) {}
+    };
+    cofnij();
+    /* Gdy metadane jeszcze nie doszły, przypisanie currentTime przepada. */
+    if (video.readyState === 0) {
+      video.addEventListener('loadedmetadata', function () {
+        if (!wolnoGrac) cofnij();
+      }, { once: true });
+    }
+
     if (reduced) {
-      /* Przy wyłączonych animacjach pokazujemy jeden kadr zamiast pętli. */
-      video.removeAttribute('autoplay');
-      video.pause();
+      video.removeAttribute('autoplay');   /* jeden kadr zamiast pętli */
     } else {
-      /* Safari na iOS potrafi odmówić autoplay do pierwszej interakcji. */
-      var play = function () {
-        var p = video.play();
-        if (p && p.catch) p.catch(function () {});
-      };
-      play();
-      video.addEventListener('loadeddata', play, { once: true });
+      /* Safari na iOS potrafi odmówić odtwarzania do pierwszej interakcji. */
+      video.addEventListener('loadeddata', graj);
       document.addEventListener('visibilitychange', function () {
-        if (!document.hidden) play();
+        if (!document.hidden) graj();
       });
     }
   }
+
+  /* ---------- ekran startowy ---------- */
+  /* Logo nalewa się od dołu, potem gaśnie, a chwilę po nim tło rozjeżdża się
+     na dwie połowy i odsłania hero. Postęp jest wiązany z realnymi sygnałami,
+     ale ma podłogę czasową, żeby animacja nie mignęła, i twardy sufit, żeby
+     wolna sieć nikogo nie uwięziła na zasłonie. */
+  (function () {
+    var splash = document.getElementById('splash');
+    var fill = document.getElementById('splash-fill');
+    var root = document.documentElement;
+    if (!splash || !root.classList.contains('splash-on')) return;
+
+    var MIN = reduced ? 0 : 1400;
+    var MAX = 3500;
+    var WYPRZEDZENIE = reduced ? 0 : 160;   /* zgodne z --logo-wyprzedzenie */
+    var ROZSUWANIE = reduced ? 20 : 1000;   /* zgodne z --rozsuwanie */
+    var t0 = Date.now();
+    var pct = 0;
+    var wyszedl = false;
+
+    function set(p) {
+      pct = Math.max(pct, Math.min(100, p));
+      fill.style.height = pct + '%';
+    }
+
+    /* Wejście logo dopiero po pierwszej klatce, żeby przejście miało od czego
+       wystartować (bez tego element od razu stałby w stanie docelowym). */
+    requestAnimationFrame(function () { splash.classList.add('is-in'); });
+
+    var crawl = setInterval(function () {
+      if (pct < 92) set(pct + (92 - pct) * 0.12 + 1);
+    }, 90);
+
+    function wyjdz() {
+      if (wyszedl) return;
+      wyszedl = true;
+      clearInterval(crawl);
+      set(100);
+      var czekaj = Math.max(0, MIN - (Date.now() - t0));
+      setTimeout(function () {
+        splash.classList.add('is-out');
+        root.classList.remove('splash-lock');       /* scroll wolny od razu */
+        /* Wideo rusza razem z zasłoną, od pierwszej klatki. */
+        setTimeout(function () { wolnoGrac = true; graj(); }, WYPRZEDZENIE);
+        setTimeout(function () {                    /* zasłona znika po animacji */
+          root.classList.remove('splash-on');
+        }, WYPRZEDZENIE + ROZSUWANIE + 60);
+      }, czekaj + (reduced ? 0 : 220));
+    }
+
+    if (video) video.addEventListener('loadeddata', function () { set(Math.max(pct, 70)); }, { once: true });
+    if (document.readyState === 'complete') wyjdz();
+    else window.addEventListener('load', wyjdz);
+    setTimeout(wyjdz, MAX);
+  })();
+
 
   /* ---------- przejście hero 1 -> hero 2 ---------- */
   /* Hero 1 jest przyklejone, hero 2 wjeżdża na nie w normalnym przepływie.
