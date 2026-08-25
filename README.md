@@ -29,25 +29,30 @@ tools/shrink.swift        mniejsza wersja wideo (AVFoundation, bez ffmpeg)
 
 ## Hero
 
-Zapętlone wideo odtwarzane samo z siebie, na cały ekran. Na wideo leży kremowa
-zasłona: gęsta u góry, gdzie stoi logo i nagłówek, przejaśniona w pasie
-środkowo-dolnym, żeby było widać ruch, i znów pełna przy krawędzi — hero wtapia
-się w kremową sekcję pod spodem.
+Zapętlone wideo na cały ekran, w naturalnym kolorze — bez filtrów i bez
+kolorowej zasłony na całym kadrze. Nad wideo jest tylko napis; logo siedzi
+w nawigacji i w stopce.
 
-Teksty w hero mają ciemniejsze odcienie niż reszta strony (`.hero__sub`,
-`.hero .eyebrow`), bo leżą na obrazie, nie na czystym kremie. Przy najcieńszym
-miejscu zasłony i najciemniejszym kadrze kontrast wynosi 9,3 dla nagłówka,
-6,5 dla podtytułu i 5,0 dla nadtytułu.
+Wideo jest jasne, więc kremowy tekst na najjaśniejszych ujęciach schodziłby do
+kontrastu 2,0. Zamiast przyciemniać cały kadr, `.hero__scrim` kładzie miękką
+poświatę tylko pod samym napisem (radialny gradient), plus wąskie pasy u góry
+pod nawigację i na dole pod styk z kremową sekcją. Reszta kadru zostaje
+nietknięta. W najgorszym przypadku daje to 5,8 dla nagłówka, 5,1 dla podtytułu
+i 4,9 dla nadtytułu.
+
+Nawigacja nad wideo jest jasna; po przyklejeniu dostaje kremowe tło, a znak
+firmowy wraca do swojego koloru (`filter` zdejmowany razem z klasą `is-stuck`).
 
 Źródło wideo ustawia JS zależnie od szerokości ekranu — telefon dostaje wersję
 540p zamiast 1080p. `<source media>` już nie działa w przeglądarkach, stąd wybór
-w skrypcie. Bez JS zostaje plakat z atrybutu `poster`, więc kadr i tak jest.
+w skrypcie. Bez JS zostaje plakat z atrybutu `poster`.
 
 ## Motyw i logo
 
 Tło strony (`--cream`) to `#F9F4E7` — dokładny kolor tła z oryginalnego pliku
-logo. Dzięki temu logo leży na kolorze, dla którego zostało zaprojektowane,
-i nie trzeba go nigdzie przefarbowywać filtrem.
+logo. Dzięki temu logo w stopce leży na kolorze, dla którego zostało
+zaprojektowane, bez żadnego filtra. Jedyne miejsce, gdzie jest przefarbowywane,
+to nawigacja leżąca na wideo — i tylko do momentu jej przyklejenia.
 
 `tools/logo.swift` wycina kadr z pliku źródłowego i zamienia jednolite tło na
 przezroczystość, licząc alfę z luminancji piksela — krawędzie zostają gładkie.
