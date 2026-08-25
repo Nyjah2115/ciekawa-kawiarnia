@@ -27,27 +27,6 @@ tools/logo.swift          wycinanie logo i usuwanie tła
 tools/shrink.swift        mniejsza wersja wideo (AVFoundation, bez ffmpeg)
 ```
 
-## Ekran startowy
-
-Przy wejściu pokazuje się kremowa zasłona z logo kawiarni. Logo „nalewa się"
-od dołu: pod spodem leży kopia w 11% krycia, a na niej pełna wersja przycięta
-od dołu kontenerem, którego wysokość rośnie z postępem. Na wyjściu tło pęka na
-dwie połowy, które rozjeżdżają się w górę i w dół, odsłaniając hero.
-
-Postęp jest wiązany z realnymi sygnałami (`loadeddata` wideo, `window.load`),
-ale ma podłogę 900 ms, żeby animacja nie mignęła, i twardy sufit 3,5 s, żeby
-wolna sieć nikogo nie uwięziła na zasłonie. Najkrótsze wejście trwa ok. 2,2 s,
-najdłuższe ok. 4,8 s.
-
-Dwie osobne klasy na `<html>`: `splash-lock` blokuje scroll i schodzi już na
-starcie rozsuwania, `splash-on` odpowiada za widoczność i schodzi dopiero po
-animacji. Gdyby to była jedna klasa, zasłona znikałaby natychmiast i nie byłoby
-czego oglądać.
-
-Klasę dopisuje wbudowany skrypt w `<head>`, przed pierwszym malowaniem — dzięki
-temu strona nie mignie pod zasłoną, a przy wyłączonym JS ekran startowy w ogóle
-się nie pojawia i nic nie zostaje na wierzchu.
-
 ## Hero
 
 Zapętlone wideo na cały ekran, w naturalnym kolorze — bez filtrów i bez
