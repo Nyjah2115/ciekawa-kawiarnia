@@ -16,6 +16,8 @@
   --zaslona:#F9F4E7;
   --ghost:.11;
   --rozsuwanie:1000ms;
+  --logo-zanik:280ms;        /* jak szybko znika logo */
+  --logo-wyprzedzenie:160ms; /* o ile wcześniej znika niż rusza zasłona */
 }
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -37,7 +39,8 @@ body{background:#111;font-family:var(--sans);color:var(--ink);overflow:hidden}
 .splash{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:26px}
 .splash.znikniete{display:none}
-.panel{position:absolute;background:var(--zaslona);transition:transform var(--rozsuwanie) cubic-bezier(.76,0,.24,1)}
+.panel{position:absolute;background:var(--zaslona);
+  transition:transform var(--rozsuwanie) cubic-bezier(.76,0,.24,1) var(--logo-wyprzedzenie)}
 
 /* pionowe rozsunięcie */
 [data-wariant="pion"] .panel{left:0;width:100%;height:50.2%}
@@ -55,39 +58,41 @@ body{background:#111;font-family:var(--sans);color:var(--ink);overflow:hidden}
 
 /* przenikanie */
 [data-wariant="przenik"] .panel{inset:0;width:100%;height:100%;
-  transition:opacity var(--rozsuwanie) ease}
+  transition:opacity var(--rozsuwanie) ease var(--logo-wyprzedzenie)}
 [data-wariant="przenik"] .panel--b{display:none}
 [data-wariant="przenik"].wychodzi .panel--a{opacity:0}
 
 /* powiększenie i zanik */
 [data-wariant="zoom"] .panel{inset:0;width:100%;height:100%;
-  transition:transform var(--rozsuwanie) cubic-bezier(.7,0,.3,1),opacity var(--rozsuwanie) ease}
+  transition:transform var(--rozsuwanie) cubic-bezier(.7,0,.3,1) var(--logo-wyprzedzenie),
+             opacity var(--rozsuwanie) ease var(--logo-wyprzedzenie)}
 [data-wariant="zoom"] .panel--b{display:none}
 [data-wariant="zoom"].wychodzi .panel--a{transform:scale(1.35);opacity:0}
 
 /* odsłona kołowa */
 [data-wariant="kolo"] .panel{inset:0;width:100%;height:100%;
   clip-path:circle(150% at 50% 50%);
-  transition:clip-path var(--rozsuwanie) cubic-bezier(.76,0,.24,1)}
+  transition:clip-path var(--rozsuwanie) cubic-bezier(.76,0,.24,1) var(--logo-wyprzedzenie)}
 [data-wariant="kolo"] .panel--b{display:none}
 [data-wariant="kolo"].wychodzi .panel--a{clip-path:circle(0% at 50% 50%)}
 
 .znak{position:relative;z-index:2;width:clamp(150px,20vw,215px);
   opacity:0;transform:scale(.94);
   animation:wejscie .8s cubic-bezier(.22,1,.36,1) forwards;
-  transition:opacity .55s ease,transform var(--rozsuwanie) cubic-bezier(.76,0,.24,1)}
+  transition:opacity var(--logo-zanik) ease,
+             transform var(--logo-zanik) cubic-bezier(.4,0,.2,1)}
 @keyframes wejscie{to{opacity:1;transform:scale(1)}}
 .znak__tlo{width:100%;height:auto;opacity:var(--ghost);display:block}
 .znak__wrap{position:absolute;left:0;bottom:0;width:100%;height:0;overflow:hidden;
   transition:height .45s cubic-bezier(.33,1,.68,1)}
 .znak__pelne{position:absolute;left:0;bottom:0;width:100%;height:auto}
-.splash.wychodzi .znak{opacity:0;transform:scale(1.12)}
+.splash.wychodzi .znak{opacity:0;transform:scale(1.06)}
 /* bez nalewania logo po prostu jest w całości */
 .bez-nalewania .znak__tlo{opacity:0}
 .bez-nalewania .znak__wrap{height:100% !important}
 
 .etykieta{position:relative;z-index:2;font-size:.66rem;letter-spacing:.24em;
-  text-transform:uppercase;color:var(--ink-soft);transition:opacity .4s ease}
+  text-transform:uppercase;color:var(--ink-soft);transition:opacity var(--logo-zanik) ease}
 .splash.wychodzi .etykieta{opacity:0}
 .bez-etykiety .etykieta{display:none}
 
@@ -173,6 +178,13 @@ input[type=range]{width:100%;accent-color:var(--amber)}
   </div>
 
   <div class="grupa">
+    <label>Zanik logo <span class="wart" id="v-zanik">280 ms</span></label>
+    <input type="range" id="zanik" min="120" max="800" step="20" value="280">
+    <label style="margin-top:9px">Logo znika wcześniej o <span class="wart" id="v-wyprz">160 ms</span></label>
+    <input type="range" id="wyprz" min="0" max="600" step="20" value="160">
+  </div>
+
+  <div class="grupa">
     <label>Kolor zasłony</label>
     <div class="radio" id="kolor">
       <label><input type="radio" name="k" value="#F9F4E7" checked><span>krem</span></label>
@@ -209,7 +221,9 @@ input[type=range]{width:100%;accent-color:var(--amber)}
       ghost: +document.getElementById('ghost').value,
       kolor: document.querySelector('input[name=k]:checked').value,
       napis: document.getElementById('napis').checked,
-      napisTxt: document.getElementById('napisTxt').value
+      napisTxt: document.getElementById('napisTxt').value,
+      zanik: +document.getElementById('zanik').value,
+      wyprz: +document.getElementById('wyprz').value
     };
   }
 
@@ -219,6 +233,8 @@ input[type=range]{width:100%;accent-color:var(--amber)}
     root.style.setProperty('--zaslona',u.kolor);
     root.style.setProperty('--ghost',(u.ghost/100).toFixed(2));
     root.style.setProperty('--rozsuwanie',u.roz+'ms');
+    root.style.setProperty('--logo-zanik',u.zanik+'ms');
+    root.style.setProperty('--logo-wyprzedzenie',u.wyprz+'ms');
     splash.dataset.wariant=u.wariant;
     splash.classList.toggle('bez-nalewania',!u.nalew);
     splash.classList.toggle('bez-etykiety',!u.napis);
@@ -244,11 +260,12 @@ input[type=range]{width:100%;accent-color:var(--amber)}
 
     po(u.trwa, function(){
       splash.classList.add('wychodzi');
-      po(u.roz+60, function(){ splash.classList.add('znikniete'); });
+      po(u.wyprz+u.roz+60, function(){ splash.classList.add('znikniete'); });
     });
 
-    podsum.innerHTML='Zasłona: <b>'+u.trwa+' ms</b> · rozsuwanie: <b>'+u.roz+
-      ' ms</b> · razem <b>'+(u.trwa+u.roz)+' ms</b>';
+    podsum.innerHTML='Zasłona: <b>'+u.trwa+' ms</b> · logo gaśnie w <b>'+u.zanik+
+      ' ms</b>, zasłona rusza <b>'+u.wyprz+' ms</b> później · rozsuwanie: <b>'+u.roz+
+      ' ms</b> · razem <b>'+(u.trwa+u.wyprz+u.roz)+' ms</b>';
   }
 
   document.getElementById('odtworz').addEventListener('click',odtworz);
@@ -256,6 +273,8 @@ input[type=range]{width:100%;accent-color:var(--amber)}
     document.getElementById('v-trwa').textContent=document.getElementById('trwa').value+' ms';
     document.getElementById('v-roz').textContent=document.getElementById('roz').value+' ms';
     document.getElementById('v-ghost').textContent=document.getElementById('ghost').value+'%';
+    document.getElementById('v-zanik').textContent=document.getElementById('zanik').value+' ms';
+    document.getElementById('v-wyprz').textContent=document.getElementById('wyprz').value+' ms';
     odtworz();
   });
   document.getElementById('pulpit').addEventListener('change',odtworz);
