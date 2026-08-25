@@ -76,17 +76,23 @@ body{background:#111;font-family:var(--sans);color:var(--ink);overflow:hidden}
 [data-wariant="kolo"] .panel--b{display:none}
 [data-wariant="kolo"].wychodzi .panel--a{clip-path:circle(0% at 50% 50%)}
 
+/* Wejście przez klasę, nie przez @keyframes z forwards.
+   Animacja z fill-mode nadpisuje opacity ustawiane przejściem, więc logo
+   nie dawało się wygasić na wyjściu i wisiało do samego display:none. */
 .znak{position:relative;z-index:2;width:clamp(150px,20vw,215px);
-  opacity:0;transform:scale(.94);
-  animation:wejscie .8s cubic-bezier(.22,1,.36,1) forwards;
-  transition:opacity var(--logo-zanik) ease,
-             transform var(--logo-zanik) cubic-bezier(.4,0,.2,1)}
-@keyframes wejscie{to{opacity:1;transform:scale(1)}}
+  opacity:0;transform:scale(.94)}
+.splash.wszedl .znak{
+  opacity:1;transform:scale(1);
+  transition:opacity .8s cubic-bezier(.22,1,.36,1),
+             transform .8s cubic-bezier(.22,1,.36,1)}
 .znak__tlo{width:100%;height:auto;opacity:var(--ghost);display:block}
 .znak__wrap{position:absolute;left:0;bottom:0;width:100%;height:0;overflow:hidden;
   transition:height .45s cubic-bezier(.33,1,.68,1)}
 .znak__pelne{position:absolute;left:0;bottom:0;width:100%;height:auto}
-.splash.wychodzi .znak{opacity:0;transform:scale(1.06)}
+.splash.wychodzi .znak{
+  opacity:0;transform:scale(1.06);
+  transition:opacity var(--logo-zanik) ease,
+             transform var(--logo-zanik) cubic-bezier(.4,0,.2,1)}
 /* bez nalewania logo po prostu jest w całości */
 .bez-nalewania .znak__tlo{opacity:0}
 .bez-nalewania .znak__wrap{height:100% !important}
@@ -244,11 +250,10 @@ input[type=range]{width:100%;accent-color:var(--amber)}
     etyk.style.color = ciemna ? 'rgba(249,244,231,.55)' : '';
     znak.style.filter = ciemna ? 'brightness(0) invert(1)' : '';
 
-    splash.classList.remove('znikniete','wychodzi');
+    splash.classList.remove('znikniete','wychodzi','wszedl');
     wrap.style.transition='none'; wrap.style.height='0%';
-    znak.style.animation='none'; void znak.offsetWidth;
-    znak.style.animation='';
-    po(20,function(){ wrap.style.transition=''; });
+    void splash.offsetWidth;                       /* wymuś przeliczenie */
+    po(20,function(){ wrap.style.transition=''; splash.classList.add('wszedl'); });
 
     /* nalewanie rozłożone na czas trwania zasłony */
     if(u.nalew){
