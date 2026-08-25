@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@300..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=4">
+<link rel="stylesheet" href="assets/css/style.css?v=6">
 
 <script type="application/ld+json">
 {
@@ -71,7 +71,7 @@
 
 <main id="tresc">
 
-<!-- ============ HERO ============ -->
+<!-- ============ HERO 1 — wideo ============ -->
 <section class="hero" id="top">
   <!-- Źródło ustawia JS zależnie od szerokości ekranu: telefon nie musi
        ciągnąć wersji 1080p. Bez JS zostaje poster, więc kadr i tak jest. -->
@@ -80,8 +80,11 @@
          poster="assets/img/poster.jpg"
          aria-label="Ziarna kawy, przelew z chemexu, ubijana matcha i latte z sernikiem baskijskim"></video>
   <div class="hero__scrim"></div>
+  <!-- Przyciemnienie na szwie pętli: wideo zaczyna się ziarnami, a kończy
+       sernikiem, więc bez tego zapętlenie widać jako twarde cięcie. -->
+  <div class="hero__dip" id="hero-dip"></div>
 
-  <div class="wrap hero__inner">
+  <div class="wrap hero__inner" id="hero-inner">
     <p class="eyebrow">Tarnobrzeg · ul. Mickiewicza 16</p>
     <h1 class="hero__title">Kawa to dopiero&nbsp;początek.</h1>
     <p class="hero__sub">Speciality z gdańskiej palarni, matcha ubijana na miejscu i&nbsp;śniadania, które nie kończą się o&nbsp;jedenastej.</p>
@@ -91,7 +94,24 @@
     </div>
   </div>
 
-  <a class="hero__hint" href="#o-nas"><span>przewiń</span><i></i></a>
+  <div class="hero__hint" aria-hidden="true"><span>przewiń</span><i></i></div>
+</section>
+
+<!-- ============ HERO 2 — marka ============ -->
+<!-- Wjeżdża na hero 1 przy scrollu. Tu logo dostaje pełną skalę na swoim
+     własnym kremowym tle, bez żadnego przefarbowywania. -->
+<section class="hero2" id="marka">
+  <div class="wrap hero2__inner">
+    <img class="hero2__logo" src="assets/img/logo.png" alt="CIEkawa Kawiarnia" width="760" height="661">
+    <p class="hero2__claim">Twoje miejsce z duszą w&nbsp;Tarnobrzegu.</p>
+    <p class="hero2__sub">Łączymy aromatyczny świat kawy z lokalną gościnnością i&nbsp;kuchnią, która zaskakuje oryginalnymi połączeniami smaków.</p>
+    <ul class="hero2__facts">
+      <li><b>4,9 ★</b><span>w 220 opiniach Google</span></li>
+      <li><b>codziennie</b><span>pon–sob 9–18, nd 10–18</span></li>
+      <li><b>Mickiewicza 16</b><span>przy Witrynie Sztuki</span></li>
+    </ul>
+  </div>
+  <a class="hero2__hint" href="#o-nas"><span>poznaj nas</span><i></i></a>
 </section>
 
 <!-- ============ O NAS ============ -->
@@ -127,61 +147,106 @@
   </div>
 </section>
 
-<!-- ============ MENU ============ -->
+<!-- ============ MENU — karuzela 3D ============ -->
 <section class="section section--tint" id="menu">
   <div class="wrap">
     <header class="section__head">
       <p class="eyebrow">Co u nas znajdziesz</p>
-      <h2 class="h2">Cztery powody, żeby wejść.</h2>
+      <h2 class="h2">Pięć powodów, żeby wejść.</h2>
       <p class="section__note">Karta zmienia się z sezonem — poniżej to, co wraca najczęściej i po co przychodzą stali goście.</p>
     </header>
+  </div>
 
-    <div class="cards">
-      <article class="card">
-        <span class="card__num">01</span>
-        <h3>Kawa speciality</h3>
-        <p>Ziarno z renomowanej palarni w Gdańsku. Parzymy z ekspresu i z chemexu. Wielbiciele mleka też mają swoje: caffè latte malinowe i słony karmel należą do najczęściej zamawianych.</p>
-        <ul class="card__list">
-          <li>Espresso i klasyki mleczne</li>
-          <li>Przelew z chemexu</li>
-          <li>Autorskie latte smakowe</li>
-        </ul>
+  <div class="cf" id="cf"
+       role="group" aria-roledescription="karuzela" aria-label="Co serwujemy">
+    <div class="cf__stage" id="cf-stage">
+      <article class="cf__card" data-i="0">
+        <img src="assets/img/latte.jpg" alt="Latte z rozetą w ceramicznej filiżance">
+        <div class="cf__veil"></div>
+        <div class="cf__body">
+          <span class="cf__tag">#Speciality</span>
+          <div class="cf__foot">
+            <h3>Kawa speciality</h3>
+            <span class="cf__line2">z palarni w Gdańsku</span>
+            <i class="cf__rule"></i>
+            <p>Z ekspresu i z chemexu. Caffè latte malinowe i słony karmel wychodzą najczęściej.</p>
+            <a class="cf__cta" href="#kontakt">Zamów na wynos <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
       </article>
 
-      <article class="card">
-        <span class="card__num">02</span>
-        <h3>Matcha i herbaty</h3>
-        <p>Sproszkowana zielona herbata ubijana na miejscu, w klasyce i w wersjach owocowych. Pod koniec lata króluje matcha tropikalna na soku pomarańczowym z puree z marakui.</p>
-        <ul class="card__list">
-          <li>Matcha latte</li>
-          <li>Wersje marakujowa i ananasowa</li>
-          <li>Napoje sezonowe</li>
-        </ul>
+      <article class="cf__card" data-i="1">
+        <img src="assets/img/k-matcha.jpg" alt="Matcha ubijana bambusowym pędzelkiem w ceramicznej misce">
+        <div class="cf__veil"></div>
+        <div class="cf__body">
+          <span class="cf__tag">#Matcha</span>
+          <div class="cf__foot">
+            <h3>Matcha i herbaty</h3>
+            <span class="cf__line2">ubijana na miejscu</span>
+            <i class="cf__rule"></i>
+            <p>Późnym latem tropikalna — na soku pomarańczowym z puree z marakui.</p>
+            <a class="cf__cta" href="#kontakt">Wpadnij na kubek <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
       </article>
 
-      <article class="card">
-        <span class="card__num">03</span>
-        <h3>Śniadania cały dzień</h3>
-        <p>Nie kończymy ich o jedenastej. Poranek Sułtana, czyli jajka po turecku, kremowa jajecznica z dodatkami, chleb na zakwasie z guacamole i łososiem, shakshuka, jajka w sosie holenderskim.</p>
-        <ul class="card__list">
-          <li>Poranek Sułtana</li>
-          <li>Shakshuka</li>
-          <li>Zakwas z guacamole i łososiem</li>
-        </ul>
+      <article class="cf__card" data-i="2">
+        <img src="assets/img/k-ziarna.jpg" alt="Świeżo zmielone ziarna kawy na drewnianym blacie">
+        <div class="cf__veil"></div>
+        <div class="cf__body">
+          <span class="cf__tag">#CałyDzień</span>
+          <div class="cf__foot">
+            <h3>Śniadania</h3>
+            <span class="cf__line2">również po południu</span>
+            <i class="cf__rule"></i>
+            <p>Poranek Sułtana, shakshuka, zakwas z guacamole i łososiem. Bez godziny granicznej.</p>
+            <a class="cf__cta" href="#kontakt">Zarezerwuj stolik <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
       </article>
 
-      <article class="card">
-        <span class="card__num">04</span>
-        <h3>Wypieki i lunch</h3>
-        <p>Pieczemy u siebie. Sernik baskijski i hałka wychodzą z kuchni najszybciej. Do tego sałatka Kozimierz z malinami i kozim serem, schiacciata i lekkie kompozycje lunchowe.</p>
-        <ul class="card__list">
-          <li>Sernik baskijski</li>
-          <li>Sałatka Kozimierz</li>
-          <li>Schiacciata</li>
-        </ul>
+      <article class="cf__card" data-i="3">
+        <img src="assets/img/k-sernik.jpg" alt="Kawałek sernika baskijskiego na talerzu obok filiżanki">
+        <div class="cf__veil"></div>
+        <div class="cf__body">
+          <span class="cf__tag">#Wypieki</span>
+          <div class="cf__foot">
+            <h3>Wypieki i lunch</h3>
+            <span class="cf__line2">pieczone u nas</span>
+            <i class="cf__rule"></i>
+            <p>Sernik baskijski, hałka, sałatka Kozimierz z malinami i kozim serem, schiacciata.</p>
+            <a class="cf__cta" href="#kontakt">Sprawdź, co dziś <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </article>
+
+      <article class="cf__card" data-i="4">
+        <img src="assets/img/wlasciciele.jpg" alt="Angelika i Daniel przy stoliku w ogródku kawiarni">
+        <div class="cf__veil"></div>
+        <div class="cf__body">
+          <span class="cf__tag">#Miejsce</span>
+          <div class="cf__foot">
+            <h3>Ogródek i sala</h3>
+            <span class="cf__line2">około 20 miejsc</span>
+            <i class="cf__rule"></i>
+            <p>Przyjazne dzieciom i psom, dobre do pracy na laptopie. Prowadzą Angelika i Daniel.</p>
+            <a class="cf__cta" href="#kontakt">Jak dojechać <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
       </article>
     </div>
 
+    <button class="cf__nav cf__nav--prev" id="cf-prev" type="button" aria-label="Poprzedni slajd">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button class="cf__nav cf__nav--next" id="cf-next" type="button" aria-label="Następny slajd">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <div class="cf__dots" id="cf-dots" role="tablist" aria-label="Wybór slajdu"></div>
+  </div>
+
+  <div class="wrap">
     <p class="menu__foot">Dania dostępne także w wersji bezglutenowej. Kawę i jedzenie zamówisz na wynos — telefonicznie pod <a href="tel:+48608023083">608&nbsp;023&nbsp;083</a>.</p>
   </div>
 </section>
@@ -311,6 +376,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=4"></script>
+<script src="assets/js/main.js?v=6"></script>
 </body>
 </html>

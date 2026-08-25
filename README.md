@@ -47,6 +47,47 @@ firmowy wraca do swojego koloru (`filter` zdejmowany razem z klasą `is-stuck`).
 540p zamiast 1080p. `<source media>` już nie działa w przeglądarkach, stąd wybór
 w skrypcie. Bez JS zostaje plakat z atrybutu `poster`.
 
+## Przejście do drugiego hero
+
+Hero 1 jest `position:sticky`, a hero 2 leży pod nim w normalnym przepływie —
+przy scrollu wjeżdża na wideo jak podnoszona karta (zaokrąglone górne rogi,
+cień od góry). Skrypt dodatkowo wygasza i lekko odsuwa treść pierwszego hero,
+żeby to nie było samo nasunięcie.
+
+Hero 2 to moment marki: logo w pełnej skali na swoim własnym kremie, hasło
+kawiarni i trzy fakty (ocena, godziny, adres).
+
+Nawigacja przykleja się dopiero wtedy, gdy hero 2 dojdzie pod jej dolną
+krawędź — nie po `scrollY > 40`, bo nad wideo pasek musi zostać przezroczysty
+przez całą wysokość pierwszego ekranu.
+
+## Szew pętli wideo
+
+Wideo zaczyna się ziarnami, a kończy sernikiem, więc `loop` dawał widoczne
+twarde cięcie. `.hero__dip` przyciemnia kadr przez 0,55 s po obu stronach szwu,
+sterowane z `currentTime` po krzywej smoothstep. Na styku obie strony wychodzą
+na tej samej wartości (0,88), więc nie ma przeskoku — czyta się jak miękkie
+mrugnięcie. Pętla `requestAnimationFrame` chodzi tylko wtedy, gdy hero jest na
+ekranie (IntersectionObserver).
+
+## Karuzela w sekcji menu
+
+Sekcja „Co u nas znajdziesz" to karuzela 3D w stylu coverflow: karta centralna
+na wprost, sąsiednie odsunięte, przeskalowane i obrócone w osi Y, dalsze
+przygaszone i rozmyte.
+
+**Uwaga o stacku:** to jest port komponentu reactowego (shadcn/Tailwind/TS) na
+czysty DOM. Projekt jest statycznym HTML/CSS/JS bez kroku budowania, więc
+komponentu nie dało się wkleić jako `.tsx`. Zachowanie zostało to samo:
+autoplay 5 s z pauzą na hover i focus, strzałki, kropki, klawiatura (tylko gdy
+karuzela jest na ekranie, żeby nie przechwytywać strzałek podczas czytania
+reszty strony), swipe na dotyku. Karty poza środkiem dostają `aria-hidden`,
+a autoplay stoi przy schowanej karcie i poza ekranem.
+
+Gdyby projekt miał kiedyś przejść na Reacta, potrzebowałby: Next.js albo Vite
+z TypeScriptem, Tailwinda i `npx shadcn@latest init`. Dla jednej sekcji na
+statycznej stronie to nieproporcjonalny koszt — stąd port.
+
 ## Motyw i logo
 
 Tło strony (`--cream`) to `#F9F4E7` — dokładny kolor tła z oryginalnego pliku
@@ -63,10 +104,16 @@ Materiały od kawiarni, przeskalowane przez `sips`:
 
 | Plik | Gdzie |
 |---|---|
-| `wlasciciele.jpg` | sekcja „O nas", też jako `og:image` |
-| `latte.jpg` | pas „Nasza kawa" |
+| `wlasciciele.jpg` | sekcja „O nas", slajd „Ogródek i sala", `og:image` |
+| `latte.jpg` | pas „Nasza kawa", slajd „Kawa speciality" |
+| `k-*.jpg` | slajdy karuzeli — stopklatki z `hero.mp4` (`tools/still.swift`) |
 | `logo.png` | hero i stopka |
 | `logo-znak.png` | nawigacja |
+
+Slajdy `k-matcha`, `k-ziarna` i `k-sernik` to stopklatki z wideo hero, czyli
+grafika wygenerowana w OpenArt — nie zdjęcia realnych dań CIEkawej. Do podmiany
+na prawdziwe fotografie karty, gdy tylko będą dostępne; slajd o śniadaniach jest
+najsłabiej dopasowany, bo pokazuje ziarna zamiast jedzenia.
 
 **Prawa do zdjęć i zgoda właścicieli na wizerunek do potwierdzenia przed
 publikacją.**
