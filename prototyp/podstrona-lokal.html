@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototypy — podstrona „Lokal"</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=13">
+<style>
+.wybor{position:fixed;z-index:200;left:50%;transform:translateX(-50%);bottom:18px;
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;background:rgba(255,253,246,.97);
+  backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:100px;padding:7px;
+  box-shadow:0 14px 40px rgba(20,14,10,.26)}
+.wybor button{border:none;background:transparent;cursor:pointer;font-family:var(--sans);
+  font-size:12.5px;color:var(--ink);padding:8px 14px;border-radius:100px;transition:background .2s,color .2s}
+.wybor button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.metka{position:fixed;z-index:200;top:14px;left:14px;background:rgba(255,253,246,.95);
+  border:1px solid var(--line);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--ink-mute)}
+.metka b{color:var(--ink);font-weight:500}
+body{padding-bottom:80px}
+[data-tresc]{display:none}
+[data-tresc].aktywny{display:block}
+
+.doU{background:rgba(176,112,58,.1);border:1px dashed rgba(176,112,58,.5);color:var(--amber-ink);
+  border-radius:8px;padding:2px 8px;font-size:.78rem;display:inline-block;font-style:normal}
+
+/* ===== WSTĘP (bez zmian — to się podobało) ===== */
+.wstep{padding-top:clamp(96px,13vh,150px);padding-bottom:0}
+.wstep h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.3rem,5.4vw,3.8rem);
+  line-height:1.04;letter-spacing:-.025em;margin:.1em 0 .4em;text-wrap:balance}
+.wstep .podtytul{margin:0;color:var(--ink-mute);max-width:620px;font-size:1.08rem}
+.wstep figure{margin:clamp(30px,4vw,52px) 0 0;border-radius:var(--r);overflow:hidden}
+.wstep figure img{width:100%;height:clamp(220px,30vw,380px);object-fit:cover}
+
+/* ===== 1 — rzędy ===== */
+.r-lista{border-top:1px solid var(--line);margin-top:clamp(34px,5vw,56px)}
+.r-poz{display:grid;grid-template-columns:minmax(0,.32fr) minmax(0,1fr);gap:clamp(20px,4vw,54px);
+  padding:clamp(24px,3.4vw,38px) 0;border-bottom:1px solid var(--line)}
+@media (max-width:760px){ .r-poz{grid-template-columns:1fr;gap:10px} }
+.r-etykieta{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber-ink);
+  padding-top:.35em}
+.r-tresc p{margin:0 0 .7em;color:var(--ink-mute);line-height:1.65}
+.r-tresc p:last-child{margin:0}
+.r-tresc strong{color:var(--ink);font-weight:500}
+.r-tresc ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px}
+.r-tresc ul li{font-size:.87rem;padding:.35em .95em;border-radius:100px;
+  background:rgba(42,33,26,.05);border:1px solid var(--line)}
+.r-godz{display:flex;gap:34px;flex-wrap:wrap}
+.r-godz b{display:block;font-family:var(--serif);font-weight:400;font-size:1.5rem;line-height:1.1}
+.r-godz span{font-size:.85rem;color:var(--ink-mute)}
+
+/* ===== 2 — panel z faktami + treść ===== */
+.p-uklad{display:grid;grid-template-columns:290px minmax(0,1fr);gap:clamp(28px,5vw,64px);
+  margin-top:clamp(34px,5vw,56px);align-items:start}
+@media (max-width:900px){ .p-uklad{grid-template-columns:1fr} }
+.p-panel{position:sticky;top:100px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r);padding:26px}
+@media (max-width:900px){ .p-panel{position:static} }
+.p-panel h2{font-family:var(--serif);font-weight:400;font-size:1.2rem;margin:0 0 1em}
+.p-panel dl{margin:0;display:flex;flex-direction:column;gap:14px}
+.p-panel dt{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:.2em}
+.p-panel dd{margin:0;font-size:.95rem;line-height:1.5}
+.p-panel .p-cta{display:block;margin-top:20px;text-align:center}
+.p-tresc h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.8vw,2rem);
+  margin:0 0 .55em;letter-spacing:-.015em}
+.p-tresc section{padding-bottom:clamp(28px,3.5vw,44px);margin-bottom:clamp(28px,3.5vw,44px);
+  border-bottom:1px solid var(--line)}
+.p-tresc section:last-child{border-bottom:none;margin-bottom:0}
+.p-tresc p{margin:0 0 1em;color:var(--ink-mute)}
+.p-tresc p:last-child{margin:0}
+
+/* ===== 3 — naprzemienne zdjęcia ===== */
+.z-pasek{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  margin-top:clamp(30px,4vw,50px)}
+.z-pasek div{background:var(--card);padding:18px 20px}
+.z-pasek b{display:block;font-family:var(--serif);font-weight:400;font-size:1.3rem;line-height:1.1;margin-bottom:.25em}
+.z-pasek span{font-size:.82rem;color:var(--ink-mute)}
+.z-lista{margin-top:clamp(34px,5vw,58px);display:flex;flex-direction:column;gap:clamp(32px,4.5vw,60px)}
+.z-poz{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,54px);align-items:center}
+.z-poz:nth-child(even) .z-foto{order:2}
+@media (max-width:800px){ .z-poz{grid-template-columns:1fr} .z-poz:nth-child(even) .z-foto{order:0} }
+.z-foto{margin:0}
+.z-foto img{width:100%;height:clamp(210px,25vw,290px);object-fit:cover;border-radius:var(--r);
+  box-shadow:0 18px 44px rgba(42,33,26,.16)}
+.z-poz h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,2.6vw,1.9rem);
+  margin:0 0 .5em;letter-spacing:-.015em}
+.z-poz p{margin:0 0 .8em;color:var(--ink-mute);line-height:1.65}
+
+/* ===== 4 — rozwijane ===== */
+.q-lista{margin-top:clamp(34px,5vw,56px);border-top:1px solid var(--line)}
+.q-poz{border-bottom:1px solid var(--line)}
+.q-poz summary{cursor:pointer;list-style:none;padding:20px 44px 20px 0;position:relative;
+  font-family:var(--serif);font-weight:400;font-size:clamp(1.1rem,2vw,1.35rem);color:var(--ink);line-height:1.3}
+.q-poz summary::-webkit-details-marker{display:none}
+.q-poz summary::after{content:"";position:absolute;right:8px;top:50%;width:11px;height:11px;
+  border-right:1.6px solid var(--amber);border-bottom:1.6px solid var(--amber);
+  transform:translateY(-70%) rotate(45deg);transition:transform .25s ease}
+.q-poz[open] summary::after{transform:translateY(-30%) rotate(225deg)}
+.q-poz .tresc{padding:0 0 22px;color:var(--ink-mute);line-height:1.65;max-width:70ch}
+.q-poz .tresc p{margin:0 0 .8em}
+.q-poz .tresc p:last-child{margin:0}
+</style>
+</head>
+<body>
+
+<div class="metka">Treść pod wstępem · <b id="metka-nazwa">1</b></div>
+
+<!-- =============== WSTĘP — wspólny dla wszystkich =============== -->
+<section class="section section--cream wstep">
+  <div class="wrap">
+    <p class="eyebrow">Lokal</p>
+    <h1>Wszystko, co warto wiedzieć przed&nbsp;wizytą.</h1>
+    <p class="podtytul">Gdzie nas znaleźć, kiedy jesteśmy otwarci, co u nas zjesz i na jakich zasadach działamy.</p>
+    <figure><img src="../assets/img/fb-kawa.jpg" alt="Dwie kawy z rozetą na stoliku"></figure>
+  </div>
+</section>
+
+<!-- =============== 1 — rzędy =============== -->
+<section class="section section--cream" data-tresc="1" style="padding-top:clamp(20px,3vw,34px)">
+  <div class="wrap">
+    <div class="r-lista">
+      <div class="r-poz">
+        <div class="r-etykieta">Godziny</div>
+        <div class="r-tresc">
+          <div class="r-godz">
+            <div><b>9:00 – 18:00</b><span>poniedziałek – sobota</span></div>
+            <div><b>10:00 – 18:00</b><span>niedziela</span></div>
+          </div>
+          <p style="margin-top:.9em">Śniadania serwujemy przez cały dzień, nie tylko rano.</p>
+        </div>
+      </div>
+
+      <div class="r-poz">
+        <div class="r-etykieta">Adres</div>
+        <div class="r-tresc">
+          <p><strong>ul. Adama Mickiewicza 16, lok. 63A</strong><br>39-400 Tarnobrzeg</p>
+          <p>W sąsiedztwie Witryny Sztuki. Ogródek od frontu.</p>
+          <p><span class="doU">do uzupełnienia: gdzie dokładnie zaparkować</span></p>
+        </div>
+      </div>
+
+      <div class="r-poz">
+        <div class="r-etykieta">Kontakt</div>
+        <div class="r-tresc">
+          <p><a href="tel:+48608023083"><strong>608 023 083</strong></a> · <a href="mailto:ciekawa.tarnobrzeg@gmail.com">ciekawa.tarnobrzeg@gmail.com</a></p>
+          <p><a href="https://www.instagram.com/ciekawa_kawiarnia/" target="_blank" rel="noopener">@ciekawa_kawiarnia</a> · <a href="https://www.facebook.com/CIEkawaKawiarnia/" target="_blank" rel="noopener">Facebook</a></p>
+        </div>
+      </div>
+
+      <div class="r-poz">
+        <div class="r-etykieta">Lokal</div>
+        <div class="r-tresc">
+          <p>Około <strong>20 miejsc</strong> w środku, plus ogródek od frontu. To niewielkie miejsce — w godzinach szczytu bywa ciasno.</p>
+          <ul><li>Przyjazne dzieciom</li><li>Można z psem</li><li>Dobre do pracy na laptopie</li></ul>
+          <p style="margin-top:.8em"><span class="doU">do uzupełnienia: wi-fi, dostęp dla wózków</span></p>
+        </div>
+      </div>
+
+      <div class="r-poz">
+        <div class="r-etykieta">Karta</div>
+        <div class="r-tresc">
+          <p>Kawa speciality z renomowanej palarni w Gdańsku — z ekspresu i z chemexu. Matcha ubijana na miejscu, latem w wersjach owocowych.</p>
+          <p>Śniadania przez cały dzień: Poranek Sułtana, shakshuka, chleb na zakwasie z guacamole i łososiem. Wypieki: sernik baskijski i hałka. Lunch: sałatka Kozimierz, schiacciata. Dania także <strong>bezglutenowo</strong>.</p>
+          <p>Typowy rachunek: <strong>20–40 zł</strong> na osobę.</p>
+        </div>
+      </div>
+
+      <div class="r-poz">
+        <div class="r-etykieta">Zamówienia</div>
+        <div class="r-tresc">
+          <p>Na miejscu, na wynos i z dostawą. Na wynos przyjmujemy telefonicznie.</p>
+          <p><span class="doU">do uzupełnienia: rezerwacja stolika, płatność kartą i BLIK, aplikacja do dostaw</span></p>
+        </div>
+      </div>
+
+      <div class="r-poz">
+        <div class="r-etykieta">Catering</div>
+        <div class="r-tresc">
+          <p>Na spotkania firmowe, uroczystości rodzinne, kameralne wydarzenia i święta — z naszymi wypiekami. Szczegóły i wycenę ustalamy telefonicznie.</p>
+        </div>
+      </div>
+
+      <div class="r-poz">
+        <div class="r-etykieta">Opinie</div>
+        <div class="r-tresc">
+          <p><strong>4,9 ★</strong> — średnia z 220 opinii w Google. Na Facebooku poleca nas <strong>100%</strong> recenzentów.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== 2 — panel z faktami =============== -->
+<section class="section section--cream" data-tresc="2" style="padding-top:clamp(20px,3vw,34px)">
+  <div class="wrap">
+    <div class="p-uklad">
+      <aside class="p-panel">
+        <h2>W skrócie</h2>
+        <dl>
+          <div><dt>Godziny</dt><dd>pon–sob 9:00–18:00<br>niedziela 10:00–18:00</dd></div>
+          <div><dt>Adres</dt><dd>ul. Mickiewicza 16, lok. 63A<br>39-400 Tarnobrzeg</dd></div>
+          <div><dt>Telefon</dt><dd><a href="tel:+48608023083">608 023 083</a></dd></div>
+          <div><dt>Rachunek</dt><dd>zwykle 20–40 zł na osobę</dd></div>
+          <div><dt>Ocena</dt><dd>4,9 ★ z 220 opinii Google</dd></div>
+        </dl>
+        <a class="btn btn--solid p-cta" href="https://www.google.com/maps/place/CIEkawa+KAWIARNIA/@50.5705876,21.6706132,17z" target="_blank" rel="noopener">Wyznacz trasę</a>
+      </aside>
+
+      <div class="p-tresc">
+        <section>
+          <h2>Lokal</h2>
+          <p>Mieścimy około 20 osób w środku, do tego ogródek od frontu, gdy pogoda pozwala. To niewielkie miejsce — w godzinach szczytu bywa ciasno.</p>
+          <p>Jesteśmy przyjaźni rodzinom z dziećmi, można u nas z psem, a goście często zostają dłużej z laptopem. Znajdziesz nas w sąsiedztwie Witryny Sztuki.</p>
+          <p><span class="doU">do uzupełnienia: wi-fi, dostęp dla wózków, gdzie zaparkować</span></p>
+        </section>
+        <section>
+          <h2>Co u nas zjesz</h2>
+          <p>Kawa speciality z renomowanej palarni w Gdańsku, parzona z ekspresu i z chemexu. Matcha ubijana na miejscu, latem w wersjach owocowych.</p>
+          <p>Śniadania serwujemy przez cały dzień — Poranek Sułtana, shakshuka, chleb na zakwasie z guacamole i łososiem. Do tego autorskie wypieki: sernik baskijski i hałka, oraz lunch: sałatka Kozimierz i schiacciata. Dania przygotowujemy także bezglutenowo.</p>
+        </section>
+        <section>
+          <h2>Zamówienia i catering</h2>
+          <p>Zamówisz u nas na miejscu, na wynos i z dostawą. Na wynos przyjmujemy telefonicznie.</p>
+          <p>Robimy też catering — na spotkania firmowe, uroczystości rodzinne, kameralne wydarzenia i święta, z naszymi wypiekami. Szczegóły i wycenę ustalamy telefonicznie.</p>
+          <p><span class="doU">do uzupełnienia: rezerwacja stolika, płatność kartą i BLIK, aplikacja do dostaw</span></p>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== 3 — naprzemienne zdjęcia =============== -->
+<section class="section section--cream" data-tresc="3" style="padding-top:clamp(20px,3vw,34px)">
+  <div class="wrap">
+    <div class="z-pasek">
+      <div><b>9:00–18:00</b><span>pon–sob, nd od 10:00</span></div>
+      <div><b>Mickiewicza 16</b><span>lok. 63A</span></div>
+      <div><b>20–40 zł</b><span>na osobę</span></div>
+      <div><b>≈ 20</b><span>miejsc + ogródek</span></div>
+      <div><b>4,9 ★</b><span>220 opinii</span></div>
+    </div>
+
+    <div class="z-lista">
+      <article class="z-poz">
+        <figure class="z-foto"><img src="../assets/img/wlasciciele.jpg" alt="Ogródek przed lokalem"></figure>
+        <div>
+          <h2>Lokal i ogródek</h2>
+          <p>Około 20 miejsc w środku, plus ogródek od frontu. W sąsiedztwie Witryny Sztuki. To niewielkie miejsce — w godzinach szczytu bywa ciasno.</p>
+          <p>Przyjaźni rodzinom, można z psem, można posiedzieć z laptopem.</p>
+          <p><span class="doU">do uzupełnienia: wi-fi, wózki, parking</span></p>
+        </div>
+      </article>
+
+      <article class="z-poz">
+        <figure class="z-foto"><img src="../assets/img/fb-wypieki.jpg" alt="Latte i ciasta"></figure>
+        <div>
+          <h2>Karta</h2>
+          <p>Ziarno z gdańskiej palarni, z ekspresu i z chemexu. Matcha ubijana na miejscu. Śniadania przez cały dzień, autorskie wypieki i lunch.</p>
+          <p>Dania dostępne także w wersji bezglutenowej. Rachunek zwykle 20–40 zł na osobę.</p>
+        </div>
+      </article>
+
+      <article class="z-poz">
+        <figure class="z-foto"><img src="../assets/img/fb-sniadania.jpg" alt="Kanapka z sałatką"></figure>
+        <div>
+          <h2>Na wynos, dostawa, catering</h2>
+          <p>Zamówisz na miejscu, na wynos i z dostawą. Na wynos przyjmujemy telefonicznie pod <a href="tel:+48608023083">608 023 083</a>.</p>
+          <p>Robimy catering na spotkania firmowe, uroczystości i święta — z naszymi wypiekami.</p>
+          <p><span class="doU">do uzupełnienia: rezerwacja, płatność kartą i BLIK, aplikacja do dostaw</span></p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =============== 4 — rozwijane =============== -->
+<section class="section section--cream" data-tresc="4" style="padding-top:clamp(20px,3vw,34px)">
+  <div class="wrap">
+    <div class="q-lista">
+      <details class="q-poz" open>
+        <summary>Kiedy jesteście otwarci?</summary>
+        <div class="tresc"><p>Poniedziałek–sobota 9:00–18:00, niedziela 10:00–18:00. Śniadania serwujemy przez cały dzień, nie kończymy ich o jedenastej.</p></div>
+      </details>
+      <details class="q-poz">
+        <summary>Gdzie dokładnie Was znaleźć?</summary>
+        <div class="tresc"><p>ul. Adama Mickiewicza 16, lok. 63A, 39-400 Tarnobrzeg — w sąsiedztwie Witryny Sztuki. Ogródek mamy od frontu.</p><p><span class="doU">do uzupełnienia: gdzie zaparkować</span></p></div>
+      </details>
+      <details class="q-poz">
+        <summary>Czy można przyjść z psem albo z dziećmi?</summary>
+        <div class="tresc"><p>Tak, jedno i drugie. Psy są mile widziane w środku i w ogródku, a rodzinom z dziećmi jesteśmy przyjaźni.</p></div>
+      </details>
+      <details class="q-poz">
+        <summary>Ile osób mieści lokal?</summary>
+        <div class="tresc"><p>Około 20 w środku, plus ogródek od frontu. To niewielkie miejsce — w godzinach szczytu bywa ciasno.</p></div>
+      </details>
+      <details class="q-poz">
+        <summary>Co u Was zjem i wypiję?</summary>
+        <div class="tresc"><p>Kawę speciality z gdańskiej palarni, z ekspresu i z chemexu. Matchę ubijaną na miejscu. Śniadania przez cały dzień — Poranek Sułtana, shakshuka, zakwas z guacamole i łososiem. Wypieki: sernik baskijski, hałka. Lunch: sałatka Kozimierz, schiacciata.</p><p>Rachunek to zwykle 20–40 zł na osobę.</p></div>
+      </details>
+      <details class="q-poz">
+        <summary>Macie coś bezglutenowego?</summary>
+        <div class="tresc"><p>Tak. Dania i wypieki przygotowujemy również bezglutenowo — warto powiedzieć o tym przy zamówieniu.</p></div>
+      </details>
+      <details class="q-poz">
+        <summary>Da się zamówić na wynos albo z dostawą?</summary>
+        <div class="tresc"><p>Tak, oba sposoby. Na wynos przyjmujemy telefonicznie pod <a href="tel:+48608023083">608 023 083</a>.</p><p><span class="doU">do uzupełnienia: aplikacja do dostaw, rezerwacja stolika, płatność kartą i BLIK</span></p></div>
+      </details>
+      <details class="q-poz">
+        <summary>Robicie catering?</summary>
+        <div class="tresc"><p>Tak — na spotkania firmowe, uroczystości rodzinne, kameralne wydarzenia i święta, z naszymi wypiekami. Szczegóły i wycenę ustalamy telefonicznie.</p></div>
+      </details>
+      <details class="q-poz">
+        <summary>Można u Was popracować na laptopie?</summary>
+        <div class="tresc"><p>Tak, goście często zostają dłużej z komputerem.</p><p><span class="doU">do uzupełnienia: czy jest wi-fi dla gości</span></p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<nav class="wybor" id="wybor" aria-label="Wybór treści">
+  <button type="button" data-cel="1" aria-pressed="true">1 · rzędy</button>
+  <button type="button" data-cel="2" aria-pressed="false">2 · panel z faktami</button>
+  <button type="button" data-cel="3" aria-pressed="false">3 · ze zdjęciami</button>
+  <button type="button" data-cel="4" aria-pressed="false">4 · rozwijane</button>
+</nav>
+
+<script>
+(function(){
+  var nazwy={'1':'1 — rzędy z etykietami','2':'2 — przyklejony panel + treść',
+             '3':'3 — naprzemienne zdjęcia','4':'4 — rozwijane pytania'};
+  var b=[].slice.call(document.querySelectorAll('.wybor button'));
+  function pokaz(c){
+    document.querySelectorAll('[data-tresc]').forEach(function(s){s.classList.toggle('aktywny',s.dataset.tresc===c)});
+    b.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.cel===c?'true':'false')});
+    document.getElementById('metka-nazwa').textContent=nazwy[c];
+  }
+  b.forEach(function(x){x.addEventListener('click',function(){pokaz(x.dataset.cel)})});
+  document.addEventListener('keydown',function(e){
+    var i=b.findIndex(function(x){return x.getAttribute('aria-pressed')==='true'});
+    if(e.key==='ArrowRight')pokaz(b[(i+1)%b.length].dataset.cel);
+    if(e.key==='ArrowLeft')pokaz(b[(i-1+b.length)%b.length].dataset.cel);
+  });
+  pokaz('1');
+})();
+</script>
+</body>
+</html>
