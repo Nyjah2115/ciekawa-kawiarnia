@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototypy — sekcja „Opinie"</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=13">
+<style>
+.wybor{position:fixed;z-index:200;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:6px;
+  flex-wrap:wrap;justify-content:center;background:rgba(255,253,246,.97);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:100px;padding:7px;box-shadow:0 14px 40px rgba(20,14,10,.26)}
+.wybor button{border:none;background:transparent;cursor:pointer;font-family:var(--sans);font-size:12.5px;
+  color:var(--ink);padding:8px 14px;border-radius:100px;transition:background .2s,color .2s}
+.wybor button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.metka{position:fixed;z-index:200;top:14px;left:14px;background:rgba(255,253,246,.95);
+  border:1px solid var(--line);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--ink-mute)}
+.metka b{color:var(--ink);font-weight:500}
+.powtorz{position:fixed;z-index:200;top:14px;right:14px;border:1px solid var(--line);
+  background:rgba(255,253,246,.95);border-radius:100px;padding:7px 15px;font-size:12px;cursor:pointer;
+  font-family:var(--sans);color:var(--ink)}
+body{padding-bottom:80px}
+[data-w]{display:none}
+[data-w].aktywny{display:block}
+
+/* wspólne: karta opinii */
+.op{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px;
+  display:flex;flex-direction:column;gap:12px}
+.op__gw{color:var(--amber);letter-spacing:.1em;font-size:.9rem}
+.op__txt{font-family:var(--serif);font-size:1.08rem;line-height:1.45;color:#2C231C;margin:0}
+.op__kto{margin:auto 0 0;font-size:.8rem;color:var(--ink)}
+.op__kto span{color:var(--ink-mute)}
+
+/* ============ A — wstęga ============ */
+.a-pas{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.a-tor{display:flex;gap:18px;width:max-content;animation:jedz 46s linear infinite}
+.a-tor--wstecz{animation-direction:reverse;animation-duration:56s;margin-top:18px}
+.a-pas:hover .a-tor{animation-play-state:paused}
+.a-tor .op{width:340px;flex:none}
+@keyframes jedz{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){ .a-tor{animation:none} }
+
+/* ============ B — wjazd + liczniki ============ */
+.b-licz{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;
+  padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  margin-bottom:clamp(34px,5vw,52px)}
+.b-licz b{display:block;font-family:var(--serif);font-weight:400;font-size:2.8rem;line-height:1;
+  color:var(--ink);font-variant-numeric:tabular-nums}
+.b-licz span{font-size:.85rem;color:var(--ink-mute)}
+.b-gwiazdki{display:block;line-height:1.2}
+.b-gwiazdki i{font-style:normal;color:var(--amber);opacity:0;display:inline-block;
+  transform:scale(.4) rotate(-25deg)}
+.b-gwiazdki i.jest{opacity:1;transform:none;transition:opacity .35s ease,transform .5s cubic-bezier(.3,1.6,.5,1)}
+.b-karty{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.b-karty .op{opacity:0;transform:translateY(28px)}
+.b-karty .op.jest{opacity:1;transform:none;transition:opacity .7s ease,transform .8s cubic-bezier(.2,.9,.3,1)}
+@media (prefers-reduced-motion:reduce){ .b-karty .op,.b-gwiazdki i{opacity:1;transform:none} }
+
+/* ============ C — pojedyncza, przenikanie ============ */
+.c-scena{position:relative;min-height:270px;margin-top:clamp(30px,4vw,48px)}
+.c-slajd{position:absolute;inset:0;opacity:0;transform:translateY(14px);pointer-events:none;
+  transition:opacity .7s ease,transform .8s cubic-bezier(.2,.9,.3,1);
+  display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;gap:16px}
+.c-slajd.jest{opacity:1;transform:none;pointer-events:auto}
+.c-cyt{font-family:var(--serif);font-style:italic;font-weight:300;
+  font-size:clamp(1.4rem,3.2vw,2.3rem);line-height:1.3;margin:0;max-width:900px;text-wrap:balance}
+.c-kto{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-mute)}
+.c-kropki{display:flex;gap:8px;justify-content:center;margin-top:26px}
+.c-kropki button{width:8px;height:8px;padding:0;border:none;border-radius:100px;cursor:pointer;
+  background:rgba(42,33,26,.2);transition:width .3s,background .3s}
+.c-kropki button[aria-selected="true"]{width:26px;background:var(--amber)}
+.c-pasek{height:2px;background:var(--line);border-radius:2px;overflow:hidden;max-width:180px;margin:18px auto 0}
+.c-pasek i{display:block;height:100%;width:0;background:var(--amber)}
+
+/* ============ D — ściana kafli ============ */
+.d-gora{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,44px)}
+.d-ocena{font-family:var(--serif);font-weight:400;font-size:clamp(3.4rem,9vw,6rem);line-height:.9;
+  letter-spacing:-.03em;color:var(--ink)}
+.d-obok{font-size:.95rem;color:var(--ink-mute)}
+.d-mur{columns:3;column-gap:18px}
+@media (max-width:900px){ .d-mur{columns:2} }
+@media (max-width:600px){ .d-mur{columns:1} }
+.d-mur .op{break-inside:avoid;margin-bottom:18px;opacity:0;transform:scale(.94) translateY(20px)}
+.d-mur .op.jest{opacity:1;transform:none;
+  transition:opacity .5s ease,transform .75s cubic-bezier(.25,1.5,.45,1)}
+@media (prefers-reduced-motion:reduce){ .d-mur .op{opacity:1;transform:none} }
+</style>
+</head>
+<body>
+
+<div class="metka">Opinie · <b id="metka-nazwa">A</b></div>
+<button class="powtorz" id="powtorz" type="button">Odtwórz animację</button>
+
+<!-- ================= A ================= -->
+<section class="section section--cream aktywny" data-w="A">
+  <div class="wrap">
+    <p class="eyebrow">Opinie</p>
+    <h2 class="h2" style="max-width:16ch">4,9 na 5 w&nbsp;220 opiniach Google.</h2>
+    <p class="section__note" style="max-width:560px">Na Facebooku poleca nas 100% recenzentów. Poniżej fragmenty tego, co goście napisali sami.</p>
+  </div>
+  <div class="a-pas" style="margin-top:clamp(30px,4vw,48px)">
+    <div class="a-tor" data-klon>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Ale perełka na mapie Tarnobrzegu. Tu wszystko ma sens!"</p><figcaption class="op__kto">Anna K. <span>· Google</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Pyszne śniadania, wyborne ciasta i świetna kawa."</p><figcaption class="op__kto">Claudia K. <span>· lokalny przewodnik</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Obydwie kawy sztos! Zero posmaku chemii, czysta przyjemność."</p><figcaption class="op__kto">Marek D. <span>· lokalny przewodnik</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Przytulne miejsce na kawę speciality i śniadanie. Espresso tonic idealne."</p><figcaption class="op__kto"><span>Opinia w Google</span></figcaption></figure>
+    </div>
+    <div class="a-tor a-tor--wstecz" data-klon>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Pierwszego dnia jedliśmy pyszne kanapki, które zachęciły nas, żeby wrócić kolejnego dnia."</p><figcaption class="op__kto">Anna K. <span>· Google</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Nie byłam tam tylko jeden raz — staram się bywać regularnie."</p><figcaption class="op__kto">Claudia K. <span>· lokalny przewodnik</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Do wyboru alternatywne metody parzenia: drip v60, chemex."</p><figcaption class="op__kto"><span>Opinia w Google</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Odskocznia od klasycznej kawy."</p><figcaption class="op__kto">Marek D. <span>· lokalny przewodnik</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= B ================= -->
+<section class="section section--cream" data-w="B">
+  <div class="wrap">
+    <p class="eyebrow">Opinie</p>
+    <h2 class="h2" style="max-width:16ch">Goście oceniają nas na&nbsp;4,9.</h2>
+
+    <div class="b-licz">
+      <div><b data-do="4,9" data-typ="ocena">0,0</b><span class="b-gwiazdki" data-gw></span><span>średnia w Google</span></div>
+      <div><b data-do="220">0</b><span>opinii w Google</span></div>
+      <div><b data-do="100" data-suf="%">0%</b><span>poleca na Facebooku</span></div>
+    </div>
+
+    <div class="b-karty">
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Ale perełka na mapie Tarnobrzegu — tu wszystko ma sens! Pierwszego dnia jedliśmy pyszne kanapki, które zachęciły nas, żeby wrócić kolejnego dnia."</p><figcaption class="op__kto">Anna K. <span>· Google</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Zostawiam maksymalne oceny za wszystkie aspekty. Pyszne śniadania, wyborne ciasta i świetna kawa."</p><figcaption class="op__kto">Claudia K. <span>· lokalny przewodnik</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Caffè latte malinowe i słony karmel — obydwie kawy sztos. Zero posmaku chemii, odskocznia od klasycznej kawy."</p><figcaption class="op__kto">Marek D. <span>· lokalny przewodnik</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Bardzo fajne, przytulne miejsce na kawę speciality i śniadanie. Do wyboru drip v60 i chemex. Espresso tonic idealne."</p><figcaption class="op__kto"><span>Opinia w Google</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= C ================= -->
+<section class="section section--cream" data-w="C">
+  <div class="wrap" style="text-align:center">
+    <p class="eyebrow">Opinie</p>
+    <h2 class="h2" style="max-width:20ch;margin-inline:auto">Tak o nas piszą.</h2>
+
+    <div class="c-scena" id="c-scena">
+      <div class="c-slajd jest">
+        <span class="op__gw">★★★★★</span>
+        <p class="c-cyt">„Ale perełka na mapie Tarnobrzegu — tu wszystko ma sens!"</p>
+        <span class="c-kto">Anna K. · Google</span>
+      </div>
+      <div class="c-slajd">
+        <span class="op__gw">★★★★★</span>
+        <p class="c-cyt">„Pyszne śniadania, wyborne ciasta i świetna kawa. Staram się bywać regularnie."</p>
+        <span class="c-kto">Claudia K. · lokalny przewodnik Google</span>
+      </div>
+      <div class="c-slajd">
+        <span class="op__gw">★★★★★</span>
+        <p class="c-cyt">„Obydwie kawy sztos! Zero posmaku chemii, czysta przyjemność i odskocznia od klasycznej kawy."</p>
+        <span class="c-kto">Marek D. · lokalny przewodnik Google</span>
+      </div>
+      <div class="c-slajd">
+        <span class="op__gw">★★★★★</span>
+        <p class="c-cyt">„Przytulne miejsce na kawę speciality i śniadanie. Espresso tonic idealne."</p>
+        <span class="c-kto">Opinia w Google</span>
+      </div>
+    </div>
+
+    <div class="c-kropki" id="c-kropki"></div>
+    <div class="c-pasek"><i id="c-pasek-fill"></i></div>
+    <p class="section__note" style="margin-top:22px">4,9 ★ z 220 opinii · 100% poleca na Facebooku</p>
+  </div>
+</section>
+
+<!-- ================= D ================= -->
+<section class="section section--cream" data-w="D">
+  <div class="wrap">
+    <p class="eyebrow">Opinie</p>
+    <div class="d-gora">
+      <span class="d-ocena" data-do="4,9" data-typ="ocena">0,0</span>
+      <span class="d-obok"><span class="b-gwiazdki" data-gw></span><br>z <b data-do="220">0</b> opinii w Google</span>
+    </div>
+
+    <div class="d-mur">
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Ale perełka na mapie Tarnobrzegu — tu wszystko ma sens!"</p><figcaption class="op__kto">Anna K. <span>· Google</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Pierwszego dnia jedliśmy pyszne kanapki, które zachęciły nas, żeby wrócić kolejnego dnia. Sernik baskijski, hałka, matcha marakujowa."</p><figcaption class="op__kto">Anna K. <span>· Google</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Zostawiam maksymalne oceny za wszystkie aspekty."</p><figcaption class="op__kto">Claudia K. <span>· lokalny przewodnik</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Pyszne śniadania, wyborne ciasta i świetna kawa. Nie byłam tam tylko jeden raz — staram się bywać regularnie."</p><figcaption class="op__kto">Claudia K. <span>· lokalny przewodnik</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Caffè latte malinowe i słony karmel — obydwie kawy sztos. Zero posmaku chemii."</p><figcaption class="op__kto">Marek D. <span>· lokalny przewodnik</span></figcaption></figure>
+      <figure class="op"><span class="op__gw">★★★★★</span><p class="op__txt">„Do wyboru alternatywne metody parzenia: drip v60, chemex. Espresso tonic idealne."</p><figcaption class="op__kto"><span>Opinia w Google</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<nav class="wybor" aria-label="Wybór wariantu">
+  <button type="button" data-cel="A" aria-pressed="true">A · wstęga</button>
+  <button type="button" data-cel="B" aria-pressed="false">B · liczniki</button>
+  <button type="button" data-cel="C" aria-pressed="false">C · pojedyncza</button>
+  <button type="button" data-cel="D" aria-pressed="false">D · ściana</button>
+</nav>
+
+<script>
+(function(){
+  var maloRuchu = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Wstęga: duplikujemy zawartość toru, żeby przewijanie o -50% wracało
+     dokładnie w to samo miejsce i pętla nie miała szwu. */
+  document.querySelectorAll('[data-klon]').forEach(function(tor){
+    tor.innerHTML += tor.innerHTML;
+  });
+
+  /* Licznik: 4,9 z przecinkiem, 220 i 100% jako liczby całkowite. */
+  function licz(el){
+    var cel = el.dataset.do, suf = el.dataset.suf || '';
+    var ocena = el.dataset.typ === 'ocena';
+    var koniec = parseFloat(cel.replace(',', '.'));
+    if (maloRuchu){ el.textContent = cel + suf; return; }
+    var t0 = null, czas = 1100, gotowe = false;
+    function krok(ts){
+      if(!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / czas);
+      var e = 1 - Math.pow(1 - p, 3);          /* wyhamowanie */
+      var v = koniec * e;
+      el.textContent = (ocena ? v.toFixed(1).replace('.', ',') : Math.round(v)) + suf;
+      if(p < 1) requestAnimationFrame(krok); else gotowe = true;
+    }
+    requestAnimationFrame(krok);
+    /* Gdy karta jest w tle, requestAnimationFrame nie chodzi i liczba zostałaby
+       na zerze. Po czasie z zapasem wpisujemy wartość docelową. */
+    setTimeout(function(){ if(!gotowe) el.textContent = cel + suf; }, czas + 900);
+  }
+
+  function gwiazdki(el){
+    el.innerHTML = '';
+    for(var i=0;i<5;i++){
+      var s = document.createElement('i'); s.textContent='★'; el.appendChild(s);
+    }
+    [].forEach.call(el.children, function(s,i){
+      setTimeout(function(){ s.classList.add('jest'); }, maloRuchu ? 0 : 260 + i*110);
+    });
+  }
+
+  /* Wejście elementów przy pokazaniu wariantu — z opóźnieniem kaskadowym. */
+  function ozyw(sekcja){
+    sekcja.querySelectorAll('.jest').forEach(function(e){
+      if(!e.classList.contains('c-slajd')) e.classList.remove('jest');
+    });
+    sekcja.querySelectorAll('[data-do]').forEach(licz);
+    sekcja.querySelectorAll('[data-gw]').forEach(gwiazdki);
+    var karty = sekcja.querySelectorAll('.b-karty .op, .d-mur .op');
+    karty.forEach(function(k,i){
+      k.classList.remove('jest');
+      setTimeout(function(){ k.classList.add('jest'); }, maloRuchu ? 0 : 120 + i*90);
+    });
+  }
+
+  /* C — pojedyncza opinia z paskiem postępu */
+  var cIdx = 0, cTimer = null, cRaf = null;
+  var cSlajdy = [].slice.call(document.querySelectorAll('#c-scena .c-slajd'));
+  var cKropki = document.getElementById('c-kropki');
+  var cFill = document.getElementById('c-pasek-fill');
+  var C_CZAS = 5000;
+  cSlajdy.forEach(function(_,i){
+    var b=document.createElement('button'); b.type='button';
+    b.setAttribute('aria-label','Opinia '+(i+1));
+    b.addEventListener('click',function(){ cPokaz(i); cStart(); });
+    cKropki.appendChild(b);
+  });
+  function cPokaz(i){
+    cIdx = (i + cSlajdy.length) % cSlajdy.length;
+    cSlajdy.forEach(function(s,j){ s.classList.toggle('jest', j===cIdx); });
+    [].forEach.call(cKropki.children,function(b,j){ b.setAttribute('aria-selected', j===cIdx?'true':'false'); });
+  }
+  function cStart(){
+    clearTimeout(cTimer); cancelAnimationFrame(cRaf);
+    if(maloRuchu) return;
+    var t0=null;
+    (function tik(ts){
+      if(!t0) t0=ts;
+      var p=Math.min(1,(ts-t0)/C_CZAS);
+      cFill.style.width=(p*100)+'%';
+      if(p<1) cRaf=requestAnimationFrame(tik);
+      else { cPokaz(cIdx+1); cStart(); }
+    })(performance.now());
+  }
+
+  var przyciski=[].slice.call(document.querySelectorAll('.wybor button'));
+  var nazwy={A:'A — przewijająca się wstęga',B:'B — liczniki i wjeżdżające karty',
+             C:'C — jedna opinia naraz',D:'D — ściana kafli'};
+  function pokaz(c){
+    document.querySelectorAll('[data-w]').forEach(function(s){s.classList.toggle('aktywny',s.dataset.w===c)});
+    przyciski.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.cel===c?'true':'false')});
+    document.getElementById('metka-nazwa').textContent=nazwy[c];
+    window.scrollTo(0,0);
+    var akt=document.querySelector('[data-w="'+c+'"]');
+    ozyw(akt);
+    if(c==='C'){ cPokaz(0); cStart(); } else { clearTimeout(cTimer); cancelAnimationFrame(cRaf); }
+  }
+  przyciski.forEach(function(x){x.addEventListener('click',function(){pokaz(x.dataset.cel)})});
+  document.getElementById('powtorz').addEventListener('click',function(){
+    pokaz(document.querySelector('.wybor button[aria-pressed="true"]').dataset.cel);
+  });
+  document.addEventListener('keydown',function(e){
+    var i=przyciski.findIndex(function(x){return x.getAttribute('aria-pressed')==='true'});
+    if(e.key==='ArrowRight')pokaz(przyciski[(i+1)%przyciski.length].dataset.cel);
+    if(e.key==='ArrowLeft')pokaz(przyciski[(i-1+przyciski.length)%przyciski.length].dataset.cel);
+  });
+  pokaz('A');
+})();
+</script>
+</body>
+</html>
