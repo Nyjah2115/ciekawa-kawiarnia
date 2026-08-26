@@ -25,10 +25,10 @@ body{padding-bottom:80px}
   animation:dryf var(--czas,26s) linear var(--zwloka,0s) infinite}
 .ziarno svg{display:block;width:100%;height:auto}
 @keyframes dryf{
-  0%   {opacity:0;   transform:translate3d(0,20px,0) rotate(0deg)}
-  12%  {opacity:var(--kryc,.16)}
-  88%  {opacity:var(--kryc,.16)}
-  100% {opacity:0;   transform:translate3d(var(--dx,30px),-120px,0) rotate(var(--obrot,180deg))}
+  0%   {opacity:0;   transform:translate3d(0,var(--start,40px),0) rotate(0deg)}
+  14%  {opacity:var(--kryc,.16)}
+  86%  {opacity:var(--kryc,.16)}
+  100% {opacity:0;   transform:translate3d(var(--dx,30px),var(--lot,-200px),0) rotate(var(--obrot,180deg))}
 }
 .kt[data-ziarna="brak"] .ziarna{display:none}
 .kt[data-ziarna="duzo"] .ziarno{--kryc:.26}
@@ -179,17 +179,21 @@ body{padding-bottom:80px}
     '<ellipse cx="20" cy="28" rx="17" ry="25"/>'+
     '<path d="M20 5c-7 11-7 35 0 46" fill="none" stroke="#F9F4E7" stroke-width="3" stroke-linecap="round"/></svg>';
   var box=document.getElementById('ziarna');
-  var ILE=16;
+  var ILE=22;
   for(var i=0;i<ILE;i++){
     var z=document.createElement('span');
     z.className='ziarno';
-    var w=14+Math.round(Math.random()*22);
-    z.style.width=w+'px';
+    z.style.width=(13+Math.round(Math.random()*23))+'px';
     z.style.left=(Math.random()*100).toFixed(1)+'%';
-    z.style.top=(60+Math.random()*50).toFixed(1)+'%';
-    z.style.setProperty('--czas',(18+Math.random()*18).toFixed(1)+'s');
-    z.style.setProperty('--zwloka',(-Math.random()*30).toFixed(1)+'s');
-    z.style.setProperty('--dx',(Math.random()*120-60).toFixed(0)+'px');
+    /* Punkty startu rozrzucone po całej wysokości sekcji, nie tylko przy dole,
+       a każde ziarno pokonuje inny dystans — dzięki temu w każdej chwili są
+       rozsiane po całym kadrze, a nie ustawione w jednym pasie. */
+    z.style.top=(-8+Math.random()*116).toFixed(1)+'%';
+    z.style.setProperty('--start',(Math.random()*60-20).toFixed(0)+'px');
+    z.style.setProperty('--lot',(-(120+Math.random()*220)).toFixed(0)+'px');
+    z.style.setProperty('--czas',(16+Math.random()*20).toFixed(1)+'s');
+    z.style.setProperty('--zwloka',(-Math.random()*36).toFixed(1)+'s');
+    z.style.setProperty('--dx',(Math.random()*140-70).toFixed(0)+'px');
     z.style.setProperty('--obrot',(Math.random()*540-270).toFixed(0)+'deg');
     z.style.setProperty('--kryc',(0.10+Math.random()*0.10).toFixed(2));
     z.innerHTML=ZIARNO;
