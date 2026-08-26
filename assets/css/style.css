@@ -309,6 +309,24 @@ a{color:inherit}
 .hero2__hint i{display:block;width:1px;height:30px;background:linear-gradient(var(--ink-soft),transparent);animation:drip 2.2s ease-in-out infinite}
 
 /* ===========================================================
+   POJAWIANIE SIĘ PRZY PRZEWIJANIU
+   =========================================================== */
+/* Klasę .wjazd dokłada skrypt tuż przed obserwacją, nie ma jej w HTML.
+   Dzięki temu przy wyłączonym JS nic się nie chowa i strona wygląda
+   normalnie — animacja jest dodatkiem, nie warunkiem widoczności. */
+.wjazd{
+  opacity:0;
+  transform:translate3d(0,26px,0);
+  transition:opacity .7s ease var(--zw,0ms),
+             transform .85s cubic-bezier(.2,.9,.3,1) var(--zw,0ms);
+  will-change:opacity,transform;
+}
+.wjazd.jest{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .wjazd{opacity:1;transform:none;transition:none}
+}
+
+/* ===========================================================
    SEKCJE
    =========================================================== */
 .section{padding:clamp(80px,11vw,150px) 0;position:relative}

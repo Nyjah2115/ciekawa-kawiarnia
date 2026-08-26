@@ -122,6 +122,25 @@ Gdyby projekt miał kiedyś przejść na Reacta, potrzebowałby: Next.js albo Vi
 z TypeScriptem, Tailwinda i `npx shadcn@latest init`. Dla jednej sekcji na
 statycznej stronie to nieproporcjonalny koszt — stąd port.
 
+## Pojawianie się przy przewijaniu
+
+Nagłówki, karty i zdjęcia wjeżdżają, gdy sekcja dochodzi do dolnej krawędzi
+ekranu. Rodzeństwo w obrębie jednej grupy dostaje narastające opóźnienie, więc
+wchodzi kaskadą.
+
+Klasę `.wjazd`, która ukrywa element, **dokłada skrypt**, a nie HTML. Bez JS nic
+nie jest schowane i strona wygląda normalnie — animacja jest dodatkiem, nie
+warunkiem widoczności.
+
+Wyzwalaczem jest sprawdzanie prostokątów przy przewijaniu, nie
+`IntersectionObserver`. Do tego dwa zabezpieczenia, bo elementy startują
+niewidoczne i awaria zostawiłaby pustą stronę:
+
+- odczyt, w którym **wszystkie** prostokąty mają `top: 0`, jest odrzucany —
+  to znaczy, że przeglądarka nie policzyła jeszcze layoutu, a próg
+  przepuściłby wtedy całą stronę naraz;
+- po 9 sekundach treść pokazuje się bezwarunkowo.
+
 ## Motyw i logo
 
 Tło strony (`--cream`) to `#F9F4E7` — dokładny kolor tła z oryginalnego pliku
@@ -177,5 +196,8 @@ Wideo hero wygenerowane w OpenArt (PixVerse V6, 1080p, 8 s).
 
 ## Uwaga o cache
 
-Odwołania do `style.css` i `main.js` mają znacznik `?v=`. Po zmianie tych
-plików podbij numer, inaczej powracający goście dostaną wersję z cache.
+Odwołania do `style.css` i `main.js` mają znacznik `?v=`. **Po każdej zmianie
+tych plików podbij numer.** Dotyczy to też pracy lokalnej: przeglądarka trzyma
+`main.js?v=N` pod tym samym adresem, więc dopóki numer się nie zmieni, kolejne
+edycje skryptu w ogóle do niej nie docierają — łatwo wtedy godzinę debugować
+kod, który nigdy się nie wykonał.

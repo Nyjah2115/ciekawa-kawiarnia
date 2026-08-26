@@ -395,6 +395,83 @@
     setInterval(odswiez, 60000);
   })();
 
+  /* ---------- pojawianie się przy przewijaniu ---------- */
+  /* Elementy wyliczone selektorami, a nie oznaczone w HTML — dzięki temu
+     bez JS nic nie jest ukryte. Rodzeństwo w obrębie jednego selektora
+     dostaje narastające opóźnienie, żeby wchodziło kaskadą. */
+  (function () {
+    if (reduced) return;
+
+    var GRUPY = [
+      ['.hero2__logo', '.hero2__claim', '.hero2__sub', '.hero2__facts'],
+      ['#o-nas .eyebrow', '#o-nas .h2'],
+      ['.rozmowa__poz'],
+      ['#menu .eyebrow', '#menu .h2', '#menu .section__note'],
+      ['#menu .menu__foot'],
+      ['.band__shot', '.band__text'],
+      ['.event__poster', '.event__txt'],
+      ['#kontakt .eyebrow', '#kontakt .kt__tytul', '#kontakt .kt__adres'],
+      ['.kontakty .duzy'],
+      ['.godziny', '.trafic'],
+      ['.foot__logo', '.foot__claim', '.foot__spolecz', '.foot__meta']
+    ];
+
+    var wszystkie = [];
+    GRUPY.forEach(function (grupa) {
+      var licznik = 0;
+      grupa.forEach(function (sel) {
+        Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) {
+          el.style.setProperty('--zw', (licznik * 90) + 'ms');
+          el.classList.add('wjazd');
+          wszystkie.push(el);
+          licznik++;
+        });
+      });
+    });
+    if (!wszystkie.length) return;
+
+    function pokaz(el) { el.classList.add('jest'); }
+
+    /* Wyzwalaczem jest sprawdzanie pozycji przy przewijaniu, nie
+       IntersectionObserver — ten w karcie w tle potrafi zaraportować wszystko
+       jako widoczne i odsłonić całą stronę naraz. Rachunek na prostokątach
+       daje ten sam efekt i zawsze mówi prawdę o pozycji. */
+    function sprawdz() {
+      var h = window.innerHeight, zostalo = false, zerowe = 0, sprawdzonych = 0;
+      wszystkie.forEach(function (el) {
+        if (el.classList.contains('jest')) return;
+        sprawdzonych++;
+        var t = el.getBoundingClientRect().top;
+        if (t === 0) zerowe++;
+        if (t < h * 0.92) pokaz(el);
+        else zostalo = true;
+      });
+      /* Zanim przeglądarka policzy layout, wszystkie prostokąty mają top 0
+         i próg przepuściłby całą stronę naraz. Taki odczyt odrzucamy —
+         kolejne przewinięcie albo klatka policzy to jeszcze raz. */
+      if (sprawdzonych > 2 && zerowe === sprawdzonych) {
+        wszystkie.forEach(function (el) { el.classList.remove('jest'); });
+        return false;
+      }
+      if (!zostalo) window.removeEventListener('scroll', sprawdz);
+      return true;
+    }
+
+    window.addEventListener('scroll', sprawdz, { passive: true });
+
+    /* Pierwszy pomiar dopiero po pierwszej klatce, gdy layout jest policzony. */
+    function pierwszy() {
+      requestAnimationFrame(function () {
+        if (sprawdz() === false) requestAnimationFrame(pierwszy);
+      });
+    }
+    if (document.readyState === 'complete') pierwszy();
+    else window.addEventListener('load', pierwszy);
+
+    /* Ostatnia deska ratunku: cokolwiek się stanie, treść ma być widoczna. */
+    setTimeout(function () { wszystkie.forEach(pokaz); }, 9000);
+  })();
+
   /* ---------- nawigacja ---------- */
   var nav = document.getElementById('nav');
   if (nav) {
