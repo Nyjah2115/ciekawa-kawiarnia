@@ -3,279 +3,239 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prototypy — sekcja „Odwiedź nas"</title>
+<title>Prototyp — sekcja „Odwiedź nas"</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600&family=Inter:wght@300..600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Inter:wght@300..600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/style.css?v=14">
 <style>
-.wybor{position:fixed;z-index:200;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:6px;
-  flex-wrap:wrap;justify-content:center;background:rgba(255,253,246,.97);backdrop-filter:blur(10px);
-  border:1px solid var(--line);border-radius:100px;padding:7px;box-shadow:0 14px 40px rgba(20,14,10,.26)}
-.wybor button{border:none;background:transparent;cursor:pointer;font-family:var(--sans);font-size:12.5px;
-  color:var(--ink);padding:8px 14px;border-radius:100px;transition:background .2s,color .2s}
-.wybor button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
-.metka{position:fixed;z-index:200;top:14px;left:14px;background:rgba(255,253,246,.95);
-  border:1px solid var(--line);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--ink-mute)}
-.metka b{color:var(--ink);font-weight:500}
+.pulpit{position:fixed;z-index:200;left:50%;transform:translateX(-50%);bottom:18px;display:flex;
+  gap:6px;align-items:center;background:rgba(255,253,246,.97);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:100px;padding:7px 9px;
+  box-shadow:0 14px 40px rgba(20,14,10,.26);font-size:12.5px;color:var(--ink-mute)}
+.pulpit button{border:none;background:transparent;cursor:pointer;font-family:var(--sans);
+  font-size:12.5px;color:var(--ink);padding:7px 13px;border-radius:100px;transition:background .2s,color .2s}
+.pulpit button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
 body{padding-bottom:80px}
-[data-w]{display:none}
-[data-w].aktywny{display:block}
 
-/* status otwarcia */
-.status{display:inline-flex;align-items:center;gap:9px;border-radius:100px;padding:.5em 1.1em;
-  font-size:.84rem;font-weight:500;border:1px solid var(--line);background:var(--card)}
+/* ============ scena z ziarnami ============ */
+.kt{position:relative;overflow:hidden}
+.ziarna{position:absolute;inset:0;pointer-events:none;z-index:0}
+.ziarno{position:absolute;color:var(--amber);opacity:0;
+  animation:dryf var(--czas,26s) linear var(--zwloka,0s) infinite}
+.ziarno svg{display:block;width:100%;height:auto}
+@keyframes dryf{
+  0%   {opacity:0;   transform:translate3d(0,20px,0) rotate(0deg)}
+  12%  {opacity:var(--kryc,.16)}
+  88%  {opacity:var(--kryc,.16)}
+  100% {opacity:0;   transform:translate3d(var(--dx,30px),-120px,0) rotate(var(--obrot,180deg))}
+}
+.kt[data-ziarna="brak"] .ziarna{display:none}
+.kt[data-ziarna="duzo"] .ziarno{--kryc:.26}
+@media (prefers-reduced-motion:reduce){ .ziarna{display:none} }
+
+.kt__in{position:relative;z-index:2}
+
+/* ============ wielkie przyciski kontaktu ============ */
+.kontakty{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;
+  margin:clamp(28px,4vw,44px) 0}
+@media (max-width:720px){ .kontakty{grid-template-columns:1fr} }
+.duzy{
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:18px;
+  padding:clamp(20px,2.6vw,28px) clamp(22px,3vw,32px);
+  border-radius:var(--r);border:1px solid var(--line);background:var(--card);
+  text-decoration:none;color:var(--ink);
+  transition:transform .3s cubic-bezier(.2,.9,.3,1),box-shadow .3s ease,border-color .3s ease;
+}
+.duzy:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(42,33,26,.16);
+  border-color:rgba(42,33,26,.26)}
+/* Smuga światła przejeżdża po kafelku przy najechaniu. */
+.duzy::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);
+  transform:skewX(-18deg);opacity:0;pointer-events:none}
+.duzy:hover::after{animation:smuga .85s ease}
+@keyframes smuga{0%{left:-60%;opacity:.9}100%{left:120%;opacity:0}}
+
+.duzy__ikona{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(176,112,58,.12);color:var(--amber-ink);transition:background .3s ease}
+.duzy:hover .duzy__ikona{background:rgba(176,112,58,.2)}
+/* Słuchawka dzwoni, koperta unosi się jak klapka. */
+.duzy--tel:hover .duzy__ikona svg{animation:dzwoni .7s ease}
+@keyframes dzwoni{0%,100%{transform:rotate(0)}15%{transform:rotate(-16deg)}30%{transform:rotate(13deg)}45%{transform:rotate(-9deg)}60%{transform:rotate(6deg)}75%{transform:rotate(-3deg)}}
+.duzy--mail:hover .duzy__ikona svg{animation:klapka .6s ease}
+@keyframes klapka{0%,100%{transform:translateY(0)}40%{transform:translateY(-4px) scale(1.06)}}
+
+.duzy__txt{min-width:0}
+.duzy__etykieta{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--amber-ink);margin-bottom:.25em}
+.duzy__wart{display:block;font-family:var(--serif);font-weight:400;line-height:1.05;
+  letter-spacing:-.02em;color:var(--ink);word-break:break-word}
+.duzy--tel .duzy__wart{font-size:clamp(1.9rem,4.2vw,2.9rem);font-variant-numeric:tabular-nums}
+.duzy--mail .duzy__wart{font-size:clamp(1.02rem,2vw,1.35rem)}
+.duzy__strzalka{margin-left:auto;flex:none;color:var(--ink-soft);transition:transform .3s ease,color .3s ease}
+.duzy:hover .duzy__strzalka{transform:translateX(4px);color:var(--ink)}
+
+/* ============ kafelek z godzinami + mapa ============ */
+/* start zamiast stretch — inaczej mapa rozciąga się do wysokości kafelka
+   z godzinami i robi się większa, niż ma być. */
+.dol{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(18px,3vw,28px);
+  align-items:start}
+@media (max-width:820px){ .dol{grid-template-columns:1fr} }
+
+.godziny{position:relative;overflow:hidden;border-radius:var(--r);
+  border:1px solid var(--line);background:var(--card);padding:clamp(22px,3vw,30px)}
+/* delikatna poświata w rogu, żeby kafelek nie był płaski */
+.godziny::before{content:"";position:absolute;width:220px;height:220px;right:-70px;top:-90px;
+  border-radius:50%;background:radial-gradient(circle,rgba(176,112,58,.16),transparent 70%);
+  pointer-events:none}
+.godziny h3{font-family:var(--serif);font-weight:400;font-size:1.3rem;margin:0 0 .9em;position:relative}
+.status{display:inline-flex;align-items:center;gap:9px;border-radius:100px;padding:.45em 1em;
+  font-size:.83rem;font-weight:500;border:1px solid var(--line);background:var(--cream);
+  margin-bottom:1.1em;position:relative}
 .status i{width:8px;height:8px;border-radius:50%;background:var(--ink-mute);display:block}
 .status.otwarte i{background:#4E8B4A;box-shadow:0 0 0 4px rgba(78,139,74,.18);animation:puls 2.2s ease-in-out infinite}
 .status.zamkniete i{background:#B0703A}
 @keyframes puls{0%,100%{opacity:.5}50%{opacity:1}}
+.godziny table{width:100%;border-collapse:collapse;position:relative}
+.godziny th,.godziny td{text-align:left;padding:.5em 0;font-weight:400;font-size:.93rem;
+  border-bottom:1px solid var(--line)}
+.godziny th{color:var(--ink-mute)}
+.godziny td{text-align:right;font-variant-numeric:tabular-nums}
+.godziny tr:last-child th,.godziny tr:last-child td{border-bottom:none}
+.godziny tr.dzis th,.godziny tr.dzis td{color:var(--ink);font-weight:500}
+.godziny tr.dzis th::before{content:"● ";color:var(--amber);font-size:.7em;vertical-align:middle}
 
-.godz{width:100%;border-collapse:collapse;max-width:380px}
-.godz th,.godz td{text-align:left;padding:.55em 0;font-weight:400;font-size:.94rem;border-bottom:1px solid var(--line)}
-.godz th{color:var(--ink-mute)}
-.godz td{text-align:right;font-variant-numeric:tabular-nums}
-.godz tr.dzis th,.godz tr.dzis td{color:var(--ink);font-weight:500}
-.godz tr.dzis th::before{content:"● ";color:var(--amber);font-size:.7em;vertical-align:middle}
+.mapa{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);
+  height:clamp(230px,26vh,300px)}
+.mapa iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.mapa__btn{position:absolute;left:14px;bottom:14px;z-index:2}
 
-.linki{display:flex;flex-wrap:wrap;gap:10px;margin-top:1.4em}
-.linki a{display:inline-flex;align-items:center;gap:8px;padding:.6em 1.1em;border-radius:100px;
-  border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font-size:.9rem;
-  transition:background .2s,transform .2s}
-.linki a:hover{background:#fff;transform:translateY(-1px)}
-.linki svg{color:var(--amber-ink);flex:none}
-
-/* A — mapa na pełną szerokość z kartą */
-.a-mapa{position:relative;margin-top:clamp(30px,4vw,48px)}
-.a-mapa iframe{width:100%;height:clamp(380px,52vh,540px);border:none;border-radius:var(--r);display:block}
-.a-karta{position:absolute;top:24px;left:24px;width:min(360px,calc(100% - 48px));
-  background:rgba(255,253,246,.97);backdrop-filter:blur(8px);border:1px solid var(--line);
-  border-radius:var(--r);padding:24px;box-shadow:0 20px 50px rgba(20,14,10,.22)}
-@media (max-width:700px){ .a-karta{position:static;width:auto;margin-top:14px;backdrop-filter:none} }
-.a-karta h3{font-family:var(--serif);font-weight:400;font-size:1.35rem;margin:.6em 0 .3em}
-.a-karta p{margin:0 0 .8em;font-size:.93rem;color:var(--ink-mute)}
-
-/* B — godziny na pierwszym planie */
-.b-duze{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,5vw,3.4rem);
-  line-height:1.06;letter-spacing:-.022em;margin:.5em 0 .4em;text-wrap:balance}
-.b-uklad{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);
-  margin-top:clamp(30px,4vw,48px);align-items:start}
-@media (max-width:820px){ .b-uklad{grid-template-columns:1fr} }
-.b-uklad iframe{width:100%;height:clamp(300px,40vh,420px);border:1px solid var(--line);
-  border-radius:var(--r);display:block}
-
-/* C — trzy kolumny + mapa pod spodem */
-.c-kol{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:clamp(30px,4vw,48px)}
-@media (max-width:820px){ .c-kol{grid-template-columns:1fr} }
-.c-kol section{background:var(--card);padding:clamp(24px,3vw,32px)}
-.c-kol h3{font-family:var(--serif);font-weight:400;font-size:1.25rem;margin:0 0 .9em}
-.c-kol p{margin:0 0 .5em;font-size:.94rem;color:var(--ink-mute)}
-.c-kol .godz{max-width:none}
-.c-mapa{margin-top:18px}
-.c-mapa iframe{width:100%;height:clamp(280px,34vh,380px);border:1px solid var(--line);
-  border-radius:var(--r);display:block}
-
-/* D — karta na przyciemnionej mapie */
-.d-scena{position:relative;margin-top:clamp(30px,4vw,48px);border-radius:var(--r);overflow:hidden;
-  min-height:clamp(460px,62vh,600px);display:grid;place-items:center;padding:34px}
-.d-scena iframe{position:absolute;inset:0;width:100%;height:100%;border:none;
-  filter:grayscale(.5) brightness(.94)}
-.d-scena::after{content:"";position:absolute;inset:0;background:rgba(249,244,231,.55);pointer-events:none}
-.d-karta{position:relative;z-index:2;background:var(--card);border:1px solid var(--line);
-  border-radius:var(--r);padding:clamp(26px,3.4vw,40px);max-width:460px;width:100%;
-  box-shadow:0 26px 60px rgba(20,14,10,.26);text-align:center}
-.d-karta h3{font-family:var(--serif);font-weight:400;font-size:1.6rem;margin:.7em 0 .3em}
-.d-karta p{margin:0 0 1em;color:var(--ink-mute);font-size:.95rem}
-.d-karta .linki{justify-content:center}
-.d-karta .godz{margin-inline:auto;text-align:left}
+.adres{margin:0;color:var(--ink-mute);max-width:560px}
+.adres strong{color:var(--ink);font-weight:500}
 </style>
 </head>
 <body>
 
-<div class="metka">Odwiedź nas · <b id="metka-nazwa">A</b></div>
+<section class="section section--tint kt" id="kt" data-ziarna="malo">
+  <div class="ziarna" id="ziarna"></div>
 
-<!-- ============== A ============== -->
-<section class="section section--tint aktywny" data-w="A">
-  <div class="wrap">
+  <div class="wrap kt__in">
     <p class="eyebrow">Odwiedź nas</p>
-    <h2 class="h2" style="max-width:18ch">Mickiewicza 16, tuż przy Witrynie&nbsp;Sztuki.</h2>
-    <div class="a-mapa">
-      <iframe title="Mapa dojazdu" loading="lazy" referrerpolicy="no-referrer"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=21.6646%2C50.5676%2C21.6766%2C50.5736&amp;layer=mapnik&amp;marker=50.5705876%2C21.6706132"></iframe>
-      <div class="a-karta">
+    <h2 class="h2" style="max-width:16ch">Wpadnij na&nbsp;kawę.</h2>
+    <p class="adres"><strong>ul. Adama Mickiewicza 16, lok. 63A</strong>, 39-400 Tarnobrzeg — w sąsiedztwie Witryny Sztuki. Ogródek od frontu, parking w okolicy.</p>
+
+    <div class="kontakty">
+      <a class="duzy duzy--tel" href="tel:+48608023083">
+        <span class="duzy__ikona">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012 4.2 2 2 0 014 2h3a2 2 0 012 1.7c.1 1 .3 1.9.6 2.8a2 2 0 01-.5 2.1L8 9.8a16 16 0 006 6l1.2-1.1a2 2 0 012.1-.5c.9.3 1.8.5 2.8.6a2 2 0 011.7 2z"/></svg>
+        </span>
+        <span class="duzy__txt">
+          <span class="duzy__etykieta">Zadzwoń</span>
+          <span class="duzy__wart">608&nbsp;023&nbsp;083</span>
+        </span>
+        <svg class="duzy__strzalka" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+      </a>
+
+      <a class="duzy duzy--mail" href="mailto:ciekawa.tarnobrzeg@gmail.com">
+        <span class="duzy__ikona">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path stroke-linecap="round" d="M2.5 6.5L12 13l9.5-6.5"/></svg>
+        </span>
+        <span class="duzy__txt">
+          <span class="duzy__etykieta">Napisz</span>
+          <span class="duzy__wart">ciekawa.tarnobrzeg@gmail.com</span>
+        </span>
+        <svg class="duzy__strzalka" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="dol">
+      <div class="godziny">
+        <h3>Godziny otwarcia</h3>
         <span class="status" data-status><i></i><span data-status-txt>sprawdzam…</span></span>
-        <h3>ul. Adama Mickiewicza 16</h3>
-        <p>lok. 63A, 39-400 Tarnobrzeg<br>Ogródek od frontu, parking w okolicy.</p>
-        <table class="godz"><tbody data-godziny></tbody></table>
-        <div class="linki" data-linki></div>
+        <table><tbody data-godziny></tbody></table>
+      </div>
+
+      <div class="mapa">
+        <iframe title="Mapa dojazdu do CIEkawa Kawiarnia" loading="lazy" referrerpolicy="no-referrer"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=21.6646%2C50.5676%2C21.6766%2C50.5736&amp;layer=mapnik&amp;marker=50.5705876%2C21.6706132"></iframe>
+        <a class="btn btn--solid mapa__btn" href="https://www.google.com/maps/place/CIEkawa+KAWIARNIA/@50.5705876,21.6706132,17z" target="_blank" rel="noopener">Wyznacz trasę</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============== B ============== -->
-<section class="section section--tint" data-w="B">
-  <div class="wrap">
-    <p class="eyebrow">Odwiedź nas</p>
-    <span class="status" data-status><i></i><span data-status-txt>sprawdzam…</span></span>
-    <h2 class="b-duze" data-naglowek-godz>Zapraszamy dziś do&nbsp;18:00.</h2>
-    <p class="section__note" style="max-width:560px">ul. Adama Mickiewicza 16, lok. 63A, 39-400 Tarnobrzeg — w sąsiedztwie Witryny Sztuki. Ogródek od frontu.</p>
-
-    <div class="b-uklad">
-      <div>
-        <table class="godz"><tbody data-godziny></tbody></table>
-        <div class="linki" data-linki></div>
-      </div>
-      <iframe title="Mapa dojazdu" loading="lazy" referrerpolicy="no-referrer"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=21.6646%2C50.5676%2C21.6766%2C50.5736&amp;layer=mapnik&amp;marker=50.5705876%2C21.6706132"></iframe>
-    </div>
-  </div>
-</section>
-
-<!-- ============== C ============== -->
-<section class="section section--tint" data-w="C">
-  <div class="wrap">
-    <p class="eyebrow">Odwiedź nas</p>
-    <h2 class="h2" style="max-width:16ch">Wpadnij na kawę.</h2>
-    <div class="c-kol">
-      <section>
-        <h3>Godziny</h3>
-        <span class="status" data-status style="margin-bottom:14px"><i></i><span data-status-txt>sprawdzam…</span></span>
-        <table class="godz"><tbody data-godziny></tbody></table>
-      </section>
-      <section>
-        <h3>Adres</h3>
-        <p><strong>ul. Adama Mickiewicza 16</strong><br>lok. 63A, 39-400 Tarnobrzeg</p>
-        <p>W sąsiedztwie Witryny Sztuki. Ogródek od frontu, parking w okolicy.</p>
-        <a class="btn btn--solid" style="margin-top:6px" href="https://www.google.com/maps/place/CIEkawa+KAWIARNIA/@50.5705876,21.6706132,17z" target="_blank" rel="noopener">Wyznacz trasę</a>
-      </section>
-      <section>
-        <h3>Kontakt</h3>
-        <p>Na wynos i catering ustalamy telefonicznie.</p>
-        <div class="linki" data-linki></div>
-      </section>
-    </div>
-    <div class="c-mapa">
-      <iframe title="Mapa dojazdu" loading="lazy" referrerpolicy="no-referrer"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=21.6646%2C50.5676%2C21.6766%2C50.5736&amp;layer=mapnik&amp;marker=50.5705876%2C21.6706132"></iframe>
-    </div>
-  </div>
-</section>
-
-<!-- ============== D ============== -->
-<section class="section section--tint" data-w="D">
-  <div class="wrap">
-    <p class="eyebrow">Odwiedź nas</p>
-    <h2 class="h2" style="max-width:16ch">Znajdź nas w&nbsp;Tarnobrzegu.</h2>
-    <div class="d-scena">
-      <iframe title="Mapa dojazdu" loading="lazy" referrerpolicy="no-referrer"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=21.6646%2C50.5676%2C21.6766%2C50.5736&amp;layer=mapnik&amp;marker=50.5705876%2C21.6706132"></iframe>
-      <div class="d-karta">
-        <span class="status" data-status><i></i><span data-status-txt>sprawdzam…</span></span>
-        <h3>ul. Adama Mickiewicza 16</h3>
-        <p>lok. 63A, 39-400 Tarnobrzeg<br>Przy Witrynie Sztuki, ogródek od frontu.</p>
-        <table class="godz"><tbody data-godziny></tbody></table>
-        <div class="linki" data-linki></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<nav class="wybor" aria-label="Wybór wariantu">
-  <button type="button" data-cel="A" aria-pressed="true">A · mapa z kartą</button>
-  <button type="button" data-cel="B" aria-pressed="false">B · godziny</button>
-  <button type="button" data-cel="C" aria-pressed="false">C · trzy kolumny</button>
-  <button type="button" data-cel="D" aria-pressed="false">D · karta na mapie</button>
+<nav class="pulpit" aria-label="Ustawienia podglądu">
+  <span>Ziarna w tle:</span>
+  <button type="button" data-z="brak" aria-pressed="false">brak</button>
+  <button type="button" data-z="malo" aria-pressed="true">spokojnie</button>
+  <button type="button" data-z="duzo" aria-pressed="false">więcej</button>
 </nav>
 
 <script>
 (function(){
-  /* Godziny z profilu Google: pon–sob 9–18, niedziela 10–18. */
+  /* ---------- ziarna ---------- */
+  var ZIARNO='<svg viewBox="0 0 40 56" fill="currentColor" aria-hidden="true">'+
+    '<ellipse cx="20" cy="28" rx="17" ry="25"/>'+
+    '<path d="M20 5c-7 11-7 35 0 46" fill="none" stroke="#F9F4E7" stroke-width="3" stroke-linecap="round"/></svg>';
+  var box=document.getElementById('ziarna');
+  var ILE=16;
+  for(var i=0;i<ILE;i++){
+    var z=document.createElement('span');
+    z.className='ziarno';
+    var w=14+Math.round(Math.random()*22);
+    z.style.width=w+'px';
+    z.style.left=(Math.random()*100).toFixed(1)+'%';
+    z.style.top=(60+Math.random()*50).toFixed(1)+'%';
+    z.style.setProperty('--czas',(18+Math.random()*18).toFixed(1)+'s');
+    z.style.setProperty('--zwloka',(-Math.random()*30).toFixed(1)+'s');
+    z.style.setProperty('--dx',(Math.random()*120-60).toFixed(0)+'px');
+    z.style.setProperty('--obrot',(Math.random()*540-270).toFixed(0)+'deg');
+    z.style.setProperty('--kryc',(0.10+Math.random()*0.10).toFixed(2));
+    z.innerHTML=ZIARNO;
+    box.appendChild(z);
+  }
+
+  /* ---------- godziny i status ---------- */
   var DNI=['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
-  var GODZ=[[10,18],[9,18],[9,18],[9,18],[9,18],[9,18],[9,18]];  /* indeks = getDay() */
-
-  function terazMin(){ var d=new Date(); return d.getHours()*60+d.getMinutes(); }
-  function nastepnyOtwarty(dzien){
-    for(var i=1;i<=7;i++){ var d=(dzien+i)%7; if(GODZ[d]) return {dzien:d,i:i}; }
-    return null;
-  }
+  var GODZ=[[10,18],[9,18],[9,18],[9,18],[9,18],[9,18],[9,18]];
+  function nastepny(d){ for(var i=1;i<=7;i++){var x=(d+i)%7; if(GODZ[x]) return {d:x,i:i};} }
   function stan(){
-    var d=new Date(), dzien=d.getDay(), g=GODZ[dzien], m=terazMin();
-    var od=g[0]*60, doo=g[1]*60;
-    if(m>=od && m<doo){
-      var zostalo=doo-m;
-      return {otwarte:true,
-        txt: zostalo<=60 ? ('Otwarte jeszcze '+zostalo+' min') : ('Otwarte do '+g[1]+':00'),
-        naglowek:'Zapraszamy dziś do&nbsp;'+g[1]+':00.'};
+    var t=new Date(),d=t.getDay(),g=GODZ[d],m=t.getHours()*60+t.getMinutes();
+    if(m>=g[0]*60&&m<g[1]*60){
+      var zost=g[1]*60-m;
+      return {ok:true,txt:zost<=60?('Otwarte jeszcze '+zost+' min'):('Otwarte do '+g[1]+':00')};
     }
-    if(m<od) return {otwarte:false, txt:'Zamknięte · otwieramy o '+g[0]+':00',
-      naglowek:'Dziś otwieramy o&nbsp;'+g[0]+':00.'};
-    var n=nastepnyOtwarty(dzien);
-    return {otwarte:false, txt:'Zamknięte · otwieramy '+(n.i===1?'jutro':DNI[n.dzien])+' o '+GODZ[n.dzien][0]+':00',
-      naglowek:'Dziś już zamknięte. Jutro od&nbsp;'+GODZ[n.dzien][0]+':00.'};
+    if(m<g[0]*60) return {ok:false,txt:'Zamknięte · otwieramy o '+g[0]+':00'};
+    var n=nastepny(d);
+    return {ok:false,txt:'Zamknięte · otwieramy '+(n.i===1?'jutro':DNI[n.d])+' o '+GODZ[n.d][0]+':00'};
   }
-
-  var IKONY={
-    tel:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012 4.2 2 2 0 014 2h3a2 2 0 012 1.7c.1 1 .3 1.9.6 2.8a2 2 0 01-.5 2.1L8 9.8a16 16 0 006 6l1.2-1.1a2 2 0 012.1-.5c.9.3 1.8.5 2.8.6a2 2 0 011.7 2z"/></svg>',
-    mail:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path stroke-linecap="round" d="M2.5 6.5L12 13l9.5-6.5"/></svg>',
-    ig:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>',
-    fb:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V11h3l-.5 3H14v7h-3v-7H8.5v-3H11V8c0-2.5 1.5-4 3.8-4 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.8.6-1.8 1.8z"/></svg>'
-  };
-  var LINKI=[
-    ['tel:+48608023083','608 023 083','tel'],
-    ['mailto:ciekawa.tarnobrzeg@gmail.com','E-mail','mail'],
-    ['https://www.instagram.com/ciekawa_kawiarnia/','@ciekawa_kawiarnia','ig'],
-    ['https://www.facebook.com/CIEkawaKawiarnia/','Facebook','fb']
-  ];
-
   function wypelnij(){
-    var s=stan(), dzis=new Date().getDay();
-
+    var s=stan(),dzis=new Date().getDay();
     document.querySelectorAll('[data-status]').forEach(function(el){
-      el.classList.toggle('otwarte',s.otwarte);
-      el.classList.toggle('zamkniete',!s.otwarte);
+      el.classList.toggle('otwarte',s.ok); el.classList.toggle('zamkniete',!s.ok);
       el.querySelector('[data-status-txt]').textContent=s.txt;
     });
-    document.querySelectorAll('[data-naglowek-godz]').forEach(function(el){ el.innerHTML=s.naglowek; });
-
     document.querySelectorAll('[data-godziny]').forEach(function(tb){
       tb.innerHTML='';
-      /* od poniedziałku do niedzieli */
       [1,2,3,4,5,6,0].forEach(function(d){
         var tr=document.createElement('tr');
         if(d===dzis) tr.className='dzis';
-        tr.innerHTML='<th scope="row">'+DNI[d][0].toUpperCase()+DNI[d].slice(1)+'</th><td>'+
-                     GODZ[d][0]+':00 – '+GODZ[d][1]+':00</td>';
+        tr.innerHTML='<th scope="row">'+DNI[d][0].toUpperCase()+DNI[d].slice(1)+
+                     '</th><td>'+GODZ[d][0]+':00 – '+GODZ[d][1]+':00</td>';
         tb.appendChild(tr);
       });
     });
-
-    document.querySelectorAll('[data-linki]').forEach(function(box){
-      box.innerHTML=LINKI.map(function(l){
-        var ext=/^https/.test(l[0])?' target="_blank" rel="noopener"':'';
-        return '<a href="'+l[0]+'"'+ext+'>'+IKONY[l[2]]+'<span>'+l[1]+'</span></a>';
-      }).join('');
-    });
   }
-  wypelnij();
-  setInterval(wypelnij, 60000);   /* status odświeża się co minutę */
+  wypelnij(); setInterval(wypelnij,60000);
 
-  var b=[].slice.call(document.querySelectorAll('.wybor button'));
-  var nazwy={A:'A — mapa na całą szerokość z kartą',B:'B — godziny na pierwszym planie',
-             C:'C — trzy kolumny, mapa pod spodem',D:'D — karta na przyciemnionej mapie'};
-  function pokaz(c){
-    document.querySelectorAll('[data-w]').forEach(function(s){s.classList.toggle('aktywny',s.dataset.w===c)});
-    b.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.cel===c?'true':'false')});
-    document.getElementById('metka-nazwa').textContent=nazwy[c];
-    window.scrollTo(0,0);
-  }
-  b.forEach(function(x){x.addEventListener('click',function(){pokaz(x.dataset.cel)})});
-  document.addEventListener('keydown',function(e){
-    var i=b.findIndex(function(x){return x.getAttribute('aria-pressed')==='true'});
-    if(e.key==='ArrowRight')pokaz(b[(i+1)%b.length].dataset.cel);
-    if(e.key==='ArrowLeft')pokaz(b[(i-1+b.length)%b.length].dataset.cel);
-  });
-  pokaz('A');
+  /* ---------- pulpit ---------- */
+  var kt=document.getElementById('kt');
+  var b=[].slice.call(document.querySelectorAll('.pulpit button'));
+  b.forEach(function(x){ x.addEventListener('click',function(){
+    kt.dataset.ziarna=x.dataset.z;
+    b.forEach(function(y){ y.setAttribute('aria-pressed', y===x?'true':'false'); });
+  });});
 })();
 </script>
 </body>
