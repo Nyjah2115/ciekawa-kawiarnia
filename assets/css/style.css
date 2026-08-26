@@ -577,41 +577,109 @@ a{color:inherit}
   .plyw__in{opacity:1;transform:none;transition:none}
 }
 
-/* --- Kontakt --- */
-.contact .h2{font-size:clamp(1.7rem,3.4vw,2.5rem);line-height:1.16}
-.hours{width:100%;border-collapse:collapse;margin:2.4em 0;max-width:380px}
-.hours th,.hours td{text-align:left;padding:.62em 0;font-weight:400;font-size:.95rem;border-bottom:1px solid var(--line)}
-.hours th{color:var(--ink-mute)}
-.hours td{text-align:right;font-variant-numeric:tabular-nums}
-.contact__links{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:.95rem}
-.contact__links a{color:var(--amber-ink);text-decoration:none;border-bottom:1px solid rgba(138,84,39,.35);padding-bottom:2px}
-.contact__links a:hover{color:var(--ink);border-bottom-color:var(--ink)}
-
-/* Profile społecznościowe — wyraźne przyciski, nie kolejny link w rzędzie. */
-.spolecz{display:flex;flex-wrap:wrap;gap:10px;margin-top:1.6em}
-.spolecz__btn{
-  display:inline-flex;align-items:center;gap:9px;
-  padding:.62em 1.1em;border-radius:100px;
-  border:1px solid var(--line);background:var(--card);
-  color:var(--ink);text-decoration:none;font-size:.9rem;
-  transition:background .2s ease,border-color .2s ease,transform .2s ease;
+/* --- Kontakt: duże przyciski, kafelki i ziarna w tle --- */
+.kt{position:relative;overflow:hidden}
+.ziarna{position:absolute;inset:0;pointer-events:none;z-index:0}
+.ziarno{position:absolute;color:var(--amber);opacity:0;
+  animation:dryf var(--czas,26s) linear var(--zwloka,0s) infinite}
+.ziarno svg{display:block;width:100%;height:auto}
+@keyframes dryf{
+  0%   {opacity:0;   transform:translate3d(0,var(--start,40px),0) rotate(0deg)}
+  14%  {opacity:var(--kryc,.16)}
+  86%  {opacity:var(--kryc,.16)}
+  100% {opacity:0;   transform:translate3d(var(--dx,30px),var(--lot,-200px),0) rotate(var(--obrot,180deg))}
 }
-.spolecz__btn:hover{background:#fff;border-color:rgba(42,33,26,.3);transform:translateY(-1px)}
-.spolecz__btn svg{flex:none;color:var(--amber-ink)}
-.spolecz__note{margin:1em 0 0;font-size:.85rem;color:var(--ink-mute)}
+.kt__in{position:relative;z-index:2}
+.kt__tytul{max-width:16ch}
+.kt__adres{margin:0;color:var(--ink-mute);max-width:560px}
+.kt__adres strong{color:var(--ink);font-weight:500}
 
-.foot__spolecz{display:flex;gap:10px;margin:.4em 0 .2em}
-.foot__spolecz a{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:38px;height:38px;border-radius:50%;
-  border:1px solid var(--line);color:var(--ink);
-  transition:background .2s ease,border-color .2s ease;
-}
-.foot__spolecz a:hover{background:var(--cream);border-color:rgba(42,33,26,.3)}
+/* Duże kafle kontaktu */
+.kontakty{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;
+  margin:clamp(28px,4vw,44px) 0}
+@media (max-width:720px){ .kontakty{grid-template-columns:1fr} }
+.duzy{position:relative;overflow:hidden;display:flex;align-items:center;gap:18px;
+  padding:clamp(20px,2.6vw,28px) clamp(22px,3vw,32px);
+  border-radius:var(--r);border:1px solid var(--line);background:var(--card);
+  text-decoration:none;color:var(--ink);
+  transition:transform .3s cubic-bezier(.2,.9,.3,1),box-shadow .3s ease,border-color .3s ease}
+.duzy:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(42,33,26,.16);
+  border-color:rgba(42,33,26,.26)}
+/* Smuga światła przejeżdża po kafelku przy najechaniu. */
+.duzy::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);
+  transform:skewX(-18deg);opacity:0;pointer-events:none}
+.duzy:hover::after{animation:smuga .85s ease}
+@keyframes smuga{0%{left:-60%;opacity:.9}100%{left:120%;opacity:0}}
 
-.map{position:relative}
-.map iframe{width:100%;height:clamp(320px,46vh,470px);border:1px solid var(--line);border-radius:var(--r)}
-.map__btn{margin-top:16px}
+.duzy__ikona{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(176,112,58,.12);color:var(--amber-ink);transition:background .3s ease}
+.duzy:hover .duzy__ikona{background:rgba(176,112,58,.2)}
+.duzy--tel:hover .duzy__ikona svg{animation:dzwoni .7s ease}
+@keyframes dzwoni{0%,100%{transform:rotate(0)}15%{transform:rotate(-16deg)}30%{transform:rotate(13deg)}45%{transform:rotate(-9deg)}60%{transform:rotate(6deg)}75%{transform:rotate(-3deg)}}
+.duzy--mail:hover .duzy__ikona svg{animation:klapka .6s ease}
+@keyframes klapka{0%,100%{transform:translateY(0)}40%{transform:translateY(-4px) scale(1.06)}}
+
+.duzy__txt{min-width:0}
+.duzy__etykieta{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--amber-ink);margin-bottom:.25em}
+.duzy__wart{display:block;font-family:var(--serif);font-weight:400;line-height:1.05;
+  letter-spacing:-.02em;color:var(--ink);word-break:break-word}
+.duzy--tel .duzy__wart{font-size:clamp(1.9rem,4.2vw,2.9rem);font-variant-numeric:tabular-nums}
+.duzy--mail .duzy__wart{font-size:clamp(1.02rem,2vw,1.35rem)}
+.duzy__strzalka{margin-left:auto;flex:none;color:var(--ink-soft);
+  transition:transform .3s ease,color .3s ease}
+.duzy:hover .duzy__strzalka{transform:translateX(4px);color:var(--ink)}
+
+/* Kafelki: godziny i dojazd */
+.dol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,28px);
+  align-items:stretch}
+@media (max-width:820px){ .dol{grid-template-columns:1fr} }
+
+.godziny,.trafic{position:relative;overflow:hidden;border-radius:var(--r);
+  border:1px solid var(--line);background:var(--card);padding:clamp(22px,3vw,30px)}
+.godziny::before{content:"";position:absolute;width:220px;height:220px;right:-70px;top:-90px;
+  border-radius:50%;background:radial-gradient(circle,rgba(176,112,58,.16),transparent 70%);
+  pointer-events:none}
+.trafic::before{content:"";position:absolute;width:200px;height:200px;left:-70px;bottom:-90px;
+  border-radius:50%;background:radial-gradient(circle,rgba(110,139,90,.14),transparent 70%);
+  pointer-events:none}
+.godziny h3,.trafic h3{font-family:var(--serif);font-weight:400;font-size:1.3rem;
+  margin:0 0 .9em;position:relative}
+
+.status{display:inline-flex;align-items:center;gap:9px;border-radius:100px;padding:.45em 1em;
+  font-size:.83rem;font-weight:500;border:1px solid var(--line);background:var(--cream);
+  margin-bottom:1.1em;position:relative}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--ink-mute);display:block}
+.status.otwarte i{background:#4E8B4A;box-shadow:0 0 0 4px rgba(78,139,74,.18);
+  animation:puls 2.2s ease-in-out infinite}
+.status.zamkniete i{background:#B0703A}
+@keyframes puls{0%,100%{opacity:.5}50%{opacity:1}}
+
+.godziny table{width:100%;border-collapse:collapse;position:relative}
+.godziny th,.godziny td{text-align:left;padding:.5em 0;font-weight:400;font-size:.93rem;
+  border-bottom:1px solid var(--line)}
+.godziny th{color:var(--ink-mute)}
+.godziny td{text-align:right;font-variant-numeric:tabular-nums}
+.godziny tr:last-child th,.godziny tr:last-child td{border-bottom:none}
+.godziny tr.dzis th,.godziny tr.dzis td{color:var(--ink);font-weight:500}
+.godziny tr.dzis th::before{content:"● ";color:var(--amber);font-size:.7em;vertical-align:middle}
+
+.trafic p{margin:0 0 1.2em;color:var(--ink-mute);font-size:.95rem;position:relative}
+.trafic strong{color:var(--ink);font-weight:500}
+.trafic__btn{position:relative;gap:.55em}
+.trafic__btn svg{transition:transform .25s ease}
+.trafic__btn:hover svg{transform:translateX(3px)}
+.trafic__sep{margin:1.6em 0 .7em !important;font-size:.85rem !important}
+.trafic__spolecz{display:flex;flex-wrap:wrap;gap:10px;position:relative}
+.trafic__spolecz a{display:inline-flex;align-items:center;gap:8px;padding:.55em 1em;
+  border-radius:100px;border:1px solid var(--line);background:var(--cream);
+  color:var(--ink);text-decoration:none;font-size:.88rem;
+  transition:background .2s ease,transform .2s ease}
+.trafic__spolecz a:hover{background:#fff;transform:translateY(-1px)}
+.trafic__spolecz svg{color:var(--amber-ink);flex:none}
+
+@media (prefers-reduced-motion:reduce){ .ziarna{display:none} }
 
 /* --- Stopka --- */
 .foot{background:var(--tint);padding:60px 0;border-top:1px solid var(--line)}

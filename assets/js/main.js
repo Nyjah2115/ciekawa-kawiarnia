@@ -333,6 +333,68 @@
     setTimeout(odpal, 8000);        /* ostatnia deska ratunku */
   })();
 
+  /* ---------- kontakt: ziarna i żywy status otwarcia ---------- */
+  (function () {
+    var box = document.getElementById('ziarna');
+    var ZIARNO = '<svg viewBox="0 0 40 56" fill="currentColor" aria-hidden="true">' +
+      '<ellipse cx="20" cy="28" rx="17" ry="25"/>' +
+      '<path d="M20 5c-7 11-7 35 0 46" fill="none" stroke="#F2EAD8" stroke-width="3" stroke-linecap="round"/></svg>';
+
+    if (box && !reduced) {
+      /* Punkty startu rozrzucone po całej wysokości sekcji, a każde ziarno
+         pokonuje inny dystans — inaczej wszystkie krążą w jednym pasie. */
+      for (var i = 0; i < 22; i++) {
+        var z = document.createElement('span');
+        z.className = 'ziarno';
+        z.style.width = (13 + Math.round(Math.random() * 23)) + 'px';
+        z.style.left = (Math.random() * 100).toFixed(1) + '%';
+        z.style.top = (-8 + Math.random() * 116).toFixed(1) + '%';
+        z.style.setProperty('--start', (Math.random() * 60 - 20).toFixed(0) + 'px');
+        z.style.setProperty('--lot', (-(120 + Math.random() * 220)).toFixed(0) + 'px');
+        z.style.setProperty('--czas', (16 + Math.random() * 20).toFixed(1) + 's');
+        z.style.setProperty('--zwloka', (-Math.random() * 36).toFixed(1) + 's');
+        z.style.setProperty('--dx', (Math.random() * 140 - 70).toFixed(0) + 'px');
+        z.style.setProperty('--obrot', (Math.random() * 540 - 270).toFixed(0) + 'deg');
+        z.style.setProperty('--kryc', (0.10 + Math.random() * 0.10).toFixed(2));
+        z.innerHTML = ZIARNO;
+        box.appendChild(z);
+      }
+    }
+
+    /* Godziny wpisane raz — tabela w HTML jest pełnoprawnym zapasem na wypadek
+       braku JS, a skrypt tylko dokłada status i podświetlenie dzisiejszego dnia. */
+    var DNI = ['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
+    var GODZ = [[10,18],[9,18],[9,18],[9,18],[9,18],[9,18],[9,18]];
+    var tabela = document.querySelector('[data-godziny]');
+    var pole = document.querySelector('[data-status]');
+    if (!tabela || !pole) return;
+
+    function nastepny(d) { for (var i = 1; i <= 7; i++) { var x = (d + i) % 7; if (GODZ[x]) return { d: x, i: i }; } }
+    function stan() {
+      var t = new Date(), d = t.getDay(), g = GODZ[d], m = t.getHours() * 60 + t.getMinutes();
+      if (m >= g[0] * 60 && m < g[1] * 60) {
+        var zost = g[1] * 60 - m;
+        return { ok: true, txt: zost <= 60 ? ('Otwarte jeszcze ' + zost + ' min') : ('Otwarte do ' + g[1] + ':00') };
+      }
+      if (m < g[0] * 60) return { ok: false, txt: 'Zamknięte · otwieramy o ' + g[0] + ':00' };
+      var n = nastepny(d);
+      return { ok: false, txt: 'Zamknięte · otwieramy ' + (n.i === 1 ? 'jutro' : DNI[n.d]) + ' o ' + GODZ[n.d][0] + ':00' };
+    }
+    function odswiez() {
+      var s = stan(), dzis = new Date().getDay();
+      pole.classList.toggle('otwarte', s.ok);
+      pole.classList.toggle('zamkniete', !s.ok);
+      pole.querySelector('[data-status-txt]').textContent = s.txt;
+      /* Wiersze idą od poniedziałku, więc niedziela jest ostatnia. */
+      var kolejnosc = [1,2,3,4,5,6,0];
+      Array.prototype.forEach.call(tabela.children, function (tr, i) {
+        tr.classList.toggle('dzis', kolejnosc[i] === dzis);
+      });
+    }
+    odswiez();
+    setInterval(odswiez, 60000);
+  })();
+
   /* ---------- nawigacja ---------- */
   var nav = document.getElementById('nav');
   if (nav) {
