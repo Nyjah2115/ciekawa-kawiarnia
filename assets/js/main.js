@@ -285,6 +285,54 @@
     layout();
   })();
 
+  /* ---------- opinie: karty wchodzące przy wjeździe sekcji ---------- */
+  /* Każda karta dostaje własne tempo i skok unoszenia, żeby nie kołysały się
+     zgodnym chórem. Wejście odpalamy dopiero, gdy sekcja wchodzi na ekran —
+     przy starcie strony gość i tak by go nie zobaczył. */
+  (function () {
+    var scena = document.getElementById('plyw-scena');
+    if (!scena) return;
+    var karty = Array.prototype.slice.call(scena.querySelectorAll('.plyw'));
+
+    karty.forEach(function (k, i) {
+      k.style.setProperty('--czas', (5 + (i % 5) * 0.9).toFixed(1) + 's');
+      k.style.setProperty('--zwloka', (-(i * 0.7)).toFixed(1) + 's');
+      k.style.setProperty('--skok', (-(7 + (i % 4) * 3)) + 'px');
+    });
+
+    function wejdz() {
+      karty.forEach(function (k, i) {
+        setTimeout(function () { k.classList.add('jest'); }, reduced ? 0 : 80 + i * 85);
+      });
+    }
+
+    /* Karty startują niewidoczne, więc gdyby wyzwalacz nie zadziałał, sekcja
+       zostałaby pusta. Stąd trzy niezależne drogi: obserwator, sprawdzanie
+       pozycji przy przewijaniu i twardy limit czasu. Pierwsza, która zadziała,
+       wyłącza pozostałe. */
+    var odpalone = false;
+    function odpal() {
+      if (odpalone) return;
+      odpalone = true;
+      window.removeEventListener('scroll', sprawdz);
+      wejdz();
+    }
+    function sprawdz() {
+      if (scena.getBoundingClientRect().top < window.innerHeight * 0.85) odpal();
+    }
+
+    if (reduced) { odpal(); return; }
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (wpisy, obs) {
+        if (wpisy[0].isIntersecting) { obs.disconnect(); odpal(); }
+      }, { threshold: 0.15 }).observe(scena);
+    }
+    window.addEventListener('scroll', sprawdz, { passive: true });
+    sprawdz();                      /* gdy sekcja jest widoczna od razu */
+    setTimeout(odpal, 8000);        /* ostatnia deska ratunku */
+  })();
+
   /* ---------- nawigacja ---------- */
   var nav = document.getElementById('nav');
   if (nav) {

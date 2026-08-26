@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@300..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=13">
+<link rel="stylesheet" href="assets/css/style.css?v=14">
 <script>document.documentElement.className+=" splash-on splash-lock";</script>
 
 <script type="application/ld+json">
@@ -320,42 +320,27 @@
 
 <!-- ============ OPINIE ============ -->
 <section class="section section--cream" id="opinie">
-  <div class="wrap">
-    <header class="section__head">
-      <p class="eyebrow">Opinie</p>
-      <h2 class="h2">4,9 na 5 — w 220 opiniach Google.</h2>
-      <p class="section__note">Na Facebooku poleca nas 100% recenzentów. Poniżej fragmenty tego, co goście napisali sami.</p>
-    </header>
+  <!-- Karty krążą wokół treści. Wejście uruchamia się przy wjeździe sekcji
+       na ekran, nie przy starcie strony — inaczej gość ominąłby animację. -->
+  <div class="plyw-scena" id="plyw-scena">
+    <figure class="plyw" style="top:2%;left:1%;width:232px" data-od="sr"><span class="plyw__in"><span class="plyw__gw">★★★★★</span><p class="plyw__cyt">„Ale perełka na mapie Tarnobrzegu — tu wszystko ma sens!”</p><p class="plyw__kto">Anna K. <span>· Google</span></p></span></figure>
+    <figure class="plyw plyw--licz" style="top:6%;left:27%;width:132px" data-od="lg"><span class="plyw__in"><span class="plyw__licz">4,9 ★</span><span class="plyw__licz-op">średnia z 220 opinii</span></span></figure>
+    <figure class="plyw" style="top:3%;right:2%;width:236px" data-od="sr"><span class="plyw__in"><span class="plyw__gw">★★★★★</span><p class="plyw__cyt">„Pyszne śniadania, wyborne ciasta i świetna kawa.”</p><p class="plyw__kto">Claudia K. <span>· lokalny przewodnik</span></p></span></figure>
+    <figure class="plyw" style="top:40%;left:0;width:224px" data-od="sr"><span class="plyw__in"><span class="plyw__gw">★★★★★</span><p class="plyw__cyt">„Obydwie kawy sztos! Zero posmaku chemii, czysta przyjemność.”</p><p class="plyw__kto">Marek D. <span>· lokalny przewodnik</span></p></span></figure>
+    <figure class="plyw plyw--licz" style="top:44%;right:1%;width:126px" data-od="lg"><span class="plyw__in"><span class="plyw__licz">100%</span><span class="plyw__licz-op">poleca na Facebooku</span></span></figure>
+    <figure class="plyw" style="bottom:4%;left:12%;width:240px" data-od="sr"><span class="plyw__in"><span class="plyw__gw">★★★★★</span><p class="plyw__cyt">„Przytulne miejsce na kawę speciality. Espresso tonic idealne.”</p><p class="plyw__kto"><span>opinia w Google</span></p></span></figure>
+    <figure class="plyw" style="bottom:6%;right:8%;width:228px" data-od="sr"><span class="plyw__in"><span class="plyw__gw">★★★★★</span><p class="plyw__cyt">„Pierwszego dnia jedliśmy pyszne kanapki — wróciliśmy kolejnego dnia.”</p><p class="plyw__kto">Anna K. <span>· Google</span></p></span></figure>
+    <figure class="plyw" style="top:2%;left:2%;width:190px" data-od="mob"><span class="plyw__in"><span class="plyw__gw">★★★★★</span><p class="plyw__cyt">„Ale perełka na mapie Tarnobrzegu!”</p><p class="plyw__kto">Anna K. <span>· Google</span></p></span></figure>
+    <figure class="plyw" style="bottom:3%;right:2%;width:196px" data-od="mob"><span class="plyw__in"><span class="plyw__gw">★★★★★</span><p class="plyw__cyt">„Pyszne śniadania, wyborne ciasta i świetna kawa.”</p><p class="plyw__kto">Claudia K. <span>· Google</span></p></span></figure>
 
-    <div class="rating">
-      <div class="rating__score">
-        <span class="rating__num">4,9</span>
-        <span class="stars" aria-label="4,9 na 5 gwiazdek">★★★★★</span>
-        <span class="rating__meta">220 opinii w Google</span>
-      </div>
-      <div class="rating__score">
-        <span class="rating__num">100%</span>
-        <span class="rating__meta">poleca na Facebooku (25 opinii)</span>
-      </div>
-      <div class="rating__score">
-        <span class="rating__num">20–40 zł</span>
-        <span class="rating__meta">typowy rachunek na osobę</span>
-      </div>
-    </div>
-
-    <div class="quotes">
-      <figure class="quote">
-        <blockquote>Ale perełka na mapie Tarnobrzegu — tu wszystko ma sens! Pierwszego dnia jedliśmy pyszne kanapki, które zachęciły nas, żeby wrócić kolejnego dnia.</blockquote>
-        <figcaption>Anna K. <span>· Google</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <blockquote>Zostawiam maksymalne oceny za wszystkie aspekty. Pyszne śniadania, wyborne ciasta i świetna kawa.</blockquote>
-        <figcaption>Claudia K. <span>· lokalny przewodnik Google</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <blockquote>Caffè latte malinowe i słony karmel — obydwie kawy sztos. Zero posmaku chemii, czysta przyjemność i odskocznia od klasycznej kawy.</blockquote>
-        <figcaption>Marek D. <span>· lokalny przewodnik Google</span></figcaption>
-      </figure>
+    <div class="plyw-tresc">
+      <span class="plyw-plakietka">Opinie</span>
+      <h2 class="plyw-tytul">Goście wracają. I&nbsp;piszą, dlaczego.</h2>
+      <p class="plyw-opis">4,9 na 5 w 220 opiniach Google, 100% poleceń na Facebooku. Za każdą oceną stoi kawa, śniadanie albo kawałek sernika.</p>
+      <a class="plyw-cta" href="https://www.google.com/maps/place/CIEkawa+KAWIARNIA/@50.5705876,21.6706132,17z" target="_blank" rel="noopener">
+        Przeczytaj opinie
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+      </a>
     </div>
   </div>
 </section>
@@ -423,6 +408,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=13"></script>
+<script src="assets/js/main.js?v=14"></script>
 </body>
 </html>
