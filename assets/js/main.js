@@ -361,13 +361,12 @@
       }
     }
 
-    /* Godziny wpisane raz — tabela w HTML jest pełnoprawnym zapasem na wypadek
-       braku JS, a skrypt tylko dokłada status i podświetlenie dzisiejszego dnia. */
+    /* Godziny są w HTML jako tekst — bez JS gość nadal je widzi.
+       Skrypt dokłada tylko żywy status otwarcia. */
     var DNI = ['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
     var GODZ = [[10,18],[9,18],[9,18],[9,18],[9,18],[9,18],[9,18]];
-    var tabela = document.querySelector('[data-godziny]');
     var pole = document.querySelector('[data-status]');
-    if (!tabela || !pole) return;
+    if (!pole) return;
 
     function nastepny(d) { for (var i = 1; i <= 7; i++) { var x = (d + i) % 7; if (GODZ[x]) return { d: x, i: i }; } }
     function stan() {
@@ -381,15 +380,10 @@
       return { ok: false, txt: 'Zamknięte · otwieramy ' + (n.i === 1 ? 'jutro' : DNI[n.d]) + ' o ' + GODZ[n.d][0] + ':00' };
     }
     function odswiez() {
-      var s = stan(), dzis = new Date().getDay();
+      var s = stan();
       pole.classList.toggle('otwarte', s.ok);
       pole.classList.toggle('zamkniete', !s.ok);
       pole.querySelector('[data-status-txt]').textContent = s.txt;
-      /* Wiersze idą od poniedziałku, więc niedziela jest ostatnia. */
-      var kolejnosc = [1,2,3,4,5,6,0];
-      Array.prototype.forEach.call(tabela.children, function (tr, i) {
-        tr.classList.toggle('dzis', kolejnosc[i] === dzis);
-      });
     }
     odswiez();
     setInterval(odswiez, 60000);
@@ -410,9 +404,8 @@
       ['#menu .menu__foot'],
       ['.band__shot', '.band__text'],
       ['.event__poster', '.event__txt'],
-      ['#kontakt .eyebrow', '#kontakt .kt__tytul', '#kontakt .kt__adres'],
-      ['.kontakty .duzy'],
-      ['.godziny', '.trafic'],
+      ['#kontakt .eyebrow', '#kontakt .kt__tytul', '#kontakt .kt__tel', '#kontakt .kt__mail'],
+      ['#kontakt .kt__info', '#kontakt .status'],
       ['.foot__logo', '.foot__claim', '.foot__spolecz', '.foot__meta']
     ];
 
